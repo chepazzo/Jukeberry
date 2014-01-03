@@ -12,6 +12,7 @@ playlist = []
 ## Add files to playlist via POST to /add:
 ## curl -i -H "Content-Type: application/json" -X POST -d '{"path":"/edia/music/Misc/The Champs - Tequila.mp3"}' http://localhost:5000/add
 
+currsong = None
 proc = None
 mpg123 = None
 
@@ -20,11 +21,19 @@ mpg123 = fout.read().replace("\n", "")
 
 #pygame.mixer.init()
 def start_jukebox():
-    play_next_song()
+    ## Start playing assuming there
+    ## is no song already playing
+    if currsong is None:
+        play_next_song()
 
 def play_next_song():
+    global currsong
+    ## Clear current playing song
+    currsong = None
     song = get_next_song()
-    _popenAndCall(play_next_song,([mpg123,song],))
+    if song is not None:
+        currsong = song
+        currthread = _popenAndCall(play_next_song,([mpg123,song],))
 
 def get_next_song():
     global playlist
@@ -48,6 +57,7 @@ def _popenAndCall(onExit, popenArgs):
         return
     thread = threading.Thread(target=runInThread, args=(onExit, popenArgs))
     thread.start()
+    pp(dir(thread))
     # returns immediately after the thread starts
     return thread
 
@@ -71,12 +81,18 @@ def get_playlist():
 
 @app.route('/add', methods = ['POST'])
 def add():
+    global currsong
     global playlist
     if not request.json or not 'path' in request.json:
         abort(400)
     songpath = request.json.get('path',None)
-    if songpath is not None:
+    if os.path.isfile(songpath):
         playlist.append(songpath)
+    else:
+        return "%s file does not exist."%songpath
+    print "Added %s"%songpath
+    print "Starting Jukebox"
+    start_jukebox()
     return "added",songpath
 
 if __name__ == '__main__':
