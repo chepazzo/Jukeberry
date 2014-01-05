@@ -19,8 +19,38 @@ def index(path,verbosity=0):
                 print "Indexing file " + filename
             indexer.index(filename)
 
-class FileIndexer:
-    def index(self, filename):
+class SongList(list):
+    def __init__(self,*args, **kwargs):
+        super(list, self).__init__(*args, **kwargs)
+    def find_song(self,filename):
+        songs = [s for s in self if s.filename == filename]
+        return songs
+
+class Song(object):
+    def __init__(self,filename,
+        artist = None,
+        title = None,
+        album = None,
+        genre = None,
+        year = None):
+        self.filename = filename
+        self.artist = artist
+        self.title = title
+        self.album = album
+        self.genre = genre
+        self.year = year
+        #
+        self.id = None
+
+    def save(self):
+        pass
+
+class SongCatalog(object):
+
+    def __init__(self):
+        songs = []
+
+    def add_song(self, filename):
         # skip already indexed
         if eyeD3.isMp3File(filename) is not True:
             return
@@ -40,35 +70,12 @@ class FileIndexer:
                 filename + " - skipping file"
             return
 
-        if tags["artist"]:
-            tags["artist"], created = Artist.objects.get_or_create(
-                Name=tags["artist"]
-            )
-        if tags["album"] is not None and tags["artist"] is not None:
-            tags["album"], created = Album.objects.get_or_create(
-                Title=tags["album"]
-            )
-        if tags["genre"] is not None:
-            tags["genre"], created = Genre.objects.get_or_create(
-                Name=tags["genre"]
-            )
-        if tags["date"] is not None:
-            try:
-                tags["date"] = int(tags["date"])
-            except ValueError:
-                tags["date"] = None
-
-        audio = MP3(filename)
-        tags["length"] = int(audio.info.length)
-
-        song = Song(
-            Artist=tags["artist"],
-            Album=tags["album"],
-            Genre=tags["genre"],
-            Title=tags["title"],
-            Year=tags["date"],
-            Length=tags["length"],
-            Filename=filename
+        song = Song(filename
+            artist=tags["artist"],
+            album=tags["album"],
+            genre=tags["genre"],
+            title=tags["title"],
+            year=tags["date"],
         )
         song.save()
 
