@@ -17,6 +17,7 @@ playlist = []
 currsong = None
 proc = None
 mpg123 = None
+songlist = {}
 
 fin, fout = os.popen4(["which", "mpg123"])
 mpg123 = fout.read().replace("\n", "")
@@ -77,9 +78,15 @@ def start():
     start_jukebox()
     return "Jukebox Started!"
 
-@app.route('/get')
+@app.route('/get/list')
 def get_playlist():
     return json.dumps(playlist)
+
+@app.route('/get/songs')
+def get_songlist():
+    songs = songlist.list_all_songs_by_artist()
+    retval = {a:[{'artist':s.artist,'title':s.title} for s in songs[a]] for a in songs.keys()}
+    return json.dumps(retval)
 
 @app.route('/add', methods = ['POST'])
 def add():
@@ -100,11 +107,11 @@ def add():
 if __name__ == '__main__':
     stime = time.time()
     medialib = '/opt/OLD/opt/Send Home/KDZ Music/'
-    catalog = catalog.SongCatalog()
-    catalog.index(medialib)
+    songlist = catalog.SongCatalog()
+    songlist.index(medialib)
     etime = time.time()
     dtime = etime-stime
     print
     print
-    print len(catalog),"songs cataloged in",dtime,"seconds."
+    print len(songlist),"songs cataloged in",dtime,"seconds."
     app.run(debug = True)
