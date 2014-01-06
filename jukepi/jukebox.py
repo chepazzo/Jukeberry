@@ -5,6 +5,8 @@ import json
 import subprocess
 import os
 import threading
+import time
+import catalog
 
 from pprint import pprint as pp
 
@@ -96,4 +98,13 @@ def add():
     return "added",songpath
 
 if __name__ == '__main__':
+    stime = time.time()
+    medialib = '/opt/OLD/opt/Send Home/KDZ Music/'
+    catalog = catalog.SongCatalog()
+    catalog.index(medialib)
+    etime = time.time()
+    dtime = etime-stime
+    print
+    print
+    print len(catalog),"songs cataloged in",dtime,"seconds."
     app.run(debug = True)

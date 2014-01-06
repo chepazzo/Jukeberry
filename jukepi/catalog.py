@@ -1,6 +1,7 @@
 import os
 
-import eyeD3
+import eyed3
+import eyed3.mp3
 #from mutagen.easyid3 import EasyID3
 #from mutagen.mp3 import MP3, HeaderNotFoundError
 #from mutagen.id3 import ID3NoHeaderError
@@ -62,24 +63,31 @@ class SongCatalog(list):
         return retval
 
     def add_song(self, filename):
-        if eyeD3.isMp3File(filename) is not True:
+        print "Adding %s"%filename
+        try:
+            ismp3 = eyed3.mp3.isMp3File(filename)
+        except UnicodeDecodeError:
+            ismp3 = False
+        if ismp3 is not True:
             print "WTF: %s is not an Mp3File"%filename
             return None
-        id3 = eyeD3.Tag()
+        id3 = None
         try:
-            id3.link(filename)
+            id3=eyed3.load(filename)
         except:
-            print "WTF: eyeD3.link(%s) failed"%filename
+            print "WTF: eyed3.load(%s) failed"%filename
             return None
-        genre = id3.getGenre()
-        if genre is not None:
+        if id3 is None:
+            return None
+        genre = id3.tag.genre
+        if genre:
             genre = genre.name
         tags = {
-            "artist": id3.getArtist(),
-            "title": id3.getTitle(),
-            "album": id3.getAlbum(),
+            "artist": id3.tag.artist,
+            "title": id3.tag.title,
+            "album": id3.tag.album,
             "genre": genre,
-            "year": id3.getYear(),
+            "year": id3.tag.artist,
         }
         if not tags["artist"] or not tags["title"]:
             print "Artist or title not set in " + \
