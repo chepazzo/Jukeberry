@@ -1,30 +1,11 @@
 import os
 
-from mutagen.easyid3 import EasyID3
 import eyeD3
+#from mutagen.easyid3 import EasyID3
 #from mutagen.mp3 import MP3, HeaderNotFoundError
 #from mutagen.id3 import ID3NoHeaderError
 
-def index(path,verbosity=0):
-    if not path.endswith("/"):
-        path += "/"
-    indexer = FileIndexer()
-    listing = os.listdir(path)
-    for filename in listing:
-        filename = path + filename
-        if os.path.isdir(filename):
-            self.index(filename + "/", verbosity)
-        elif filename.endswith(".mp3"):
-            if verbosity >= 2:
-                print "Indexing file " + filename
-            indexer.index(filename)
-
-class SongList(list):
-    def __init__(self,*args, **kwargs):
-        super(list, self).__init__(*args, **kwargs)
-    def find_song(self,filename):
-        songs = [s for s in self if s.filename == filename]
-        return songs
+import time
 
 class Song(object):
     def __init__(self,filename,
@@ -39,54 +20,109 @@ class Song(object):
         self.album = album
         self.genre = genre
         self.year = year
-        #
         self.id = None
 
     def save(self):
         pass
 
-class SongCatalog(object):
+class SongCatalog(list):
+    def __init__(self,*args, **kwargs):
+        super(SongCatalog, self).__init__(*args, **kwargs)
 
-    def __init__(self):
-        songs = []
+    def index(self,path,verbosity=0):
+        if not path.endswith("/"):
+            path += "/"
+        listing = os.listdir(path)
+        for filename in listing:
+            filename = path + filename
+            if os.path.isdir(filename):
+                self.index(filename + "/", verbosity)
+            elif filename.endswith(".mp3"):
+                if verbosity >= 2:
+                    print "Indexing file " + filename
+                self.add_song(filename)
+
+    def append(self,song,*args,**kwargs):
+        if type(song) != Song:
+            print "WTF: Not a Song()"
+            return None
+        if self.find_song(song.filename):
+            print "WTF: %s already cataloged"%song.filename
+            return None
+        return super(SongCatalog, self).append(song,*args,**kwargs)
+
+    def find_song(self,song):
+        filename = song
+        if type(song) == Song:
+            filename = Song.filename
+        retval = None
+        songs = [s for s in self if s.filename == filename]
+        if len(songs) > 0:
+            retval = songs[0]
+        return retval
 
     def add_song(self, filename):
-        # skip already indexed
         if eyeD3.isMp3File(filename) is not True:
-            return
-        if self.is_indexed(filename):
-            return
+            print "WTF: %s is not an Mp3File"%filename
+            return None
         id3 = eyeD3.Tag()
-        id3.link(filename)
+        try:
+            id3.link(filename)
+        except:
+            print "WTF: eyeD3.link(%s) failed"%filename
+            return None
+        genre = id3.getGenre()
+        if genre is not None:
+            genre = genre.name
         tags = {
             "artist": id3.getArtist(),
             "title": id3.getTitle(),
             "album": id3.getAlbum(),
-            "genre": id3.getGenre().name,
+            "genre": genre,
             "year": id3.getYear(),
         }
         if not tags["artist"] or not tags["title"]:
             print "Artist or title not set in " + \
                 filename + " - skipping file"
-            return
-
-        song = Song(filename
+            return None
+        song = Song(filename,
             artist=tags["artist"],
             album=tags["album"],
             genre=tags["genre"],
             title=tags["title"],
-            year=tags["date"],
+            year=tags["year"],
         )
-        song.save()
+        #print "WTF: added %s"%song.title
+        self.append(song)
+        #print "WTF: That makes",len(self),"songs"
+        return song
 
-    def delete(self, filename):
-        # single file
-        Song.objects.filter(Filename__exact=filename).delete()
-        # directory
-        Song.objects.filter(Filename__startswith=filename).delete()
+    def list_all_songs_by_artist(self):
+        d = {a:self.get_songs_by_artist(a) for a in self.list_artists()}
+        return d
 
-    def is_indexed(self, filename):
-        data = Song.objects.filter(Filename__exact=filename)
-        if not data:
-            return False
-        return True
+    def list_artists(self):
+        artists = {s.artist:1 for s in self}.keys()
+        return artists
+
+    def get_songs_by_artist(self,artist):
+        ''' Returns list of songs by exact match '''
+        songs = [s for s in self if artist.lower() == s.artist.lower()]
+        return songs 
+
+    def find_songs_by_artist(self,artist):
+        ''' Returns list of songs by substring match '''
+        songs = [s for s in self if artist.lower() in s.artist.lower()]
+        return songs 
+
+if __name__ == '__main__':
+    ''' test module '''
+    stime = time.time()
+    medialib = '/var/media/music/'
+    catalog = SongCatalog()
+    catalog.index(medialib)
+    etime = time.time()
+    dtime = etime-stime
+    print
+    print
+    print len(catalog),"songs cataloged in",dtime,"seconds."
