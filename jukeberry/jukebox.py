@@ -1,6 +1,6 @@
 #/usr/bin/env python
 
-from flask import Flask, request
+from flask import Flask, request, render_template
 import json
 import subprocess
 import os
@@ -72,8 +72,12 @@ def _popenAndCall(onExit, popenArgs):
 app = Flask(__name__)
 
 @app.route('/')
-def index():
+def top():
     return "MISHAP JukeBox!"
+
+@app.route('/index.html')
+def index():
+    return render_template('index.html')
 
 @app.route('/start')
 def start():
@@ -111,7 +115,6 @@ def add():
 
 if __name__ == '__main__':
     import sys
-    '''
     stime = time.time()
     medialib = '/var/media/music/'
     songlist = catalog.SongCatalog()
@@ -121,7 +124,6 @@ if __name__ == '__main__':
     print
     print
     print len(songlist),"songs cataloged in",dtime,"seconds."
-    '''
     if 'debug' in sys.argv:
         print "Flask DEBUG"
         app.run(debug = True)

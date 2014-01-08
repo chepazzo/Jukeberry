@@ -1,0 +1,45 @@
+<!doctype html>
+<html ng-app>
+ <head>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
+  <script>
+    function JukeCtrl($scope,$http) {
+        $scope.play = function(song) {
+            var data = {'path':song};
+            var url = 'http://localhost:5000/add';
+            var method = 'POST';
+            $http(
+                {method: method, url: url,data: JSON.stringify(data)}
+            ).success(function(data, status) {
+                gotPlay(data,status);
+            }).error(function(data, status) {
+                gotPlay(data,status);
+            });
+        };
+        $scope.get_songs = function() {
+            var url = 'http://localhost:5000/get/songs';
+            var method = 'GET';
+            $http(
+                {method: method, url: url}
+            ).success(function(data, status) {
+                gotPlay(data,status);
+            }).error(function(data, status) {
+                gotPlay(data,status);
+            });
+        };
+    }
+  </script>
+ </head>
+ <body>
+  <div ng-controller="JukeCtrl">
+   <button ng-click="play('/var/media/music/a/Mr. Bungle - Sixteen tons.mp3')">play '16 Tons'</button><br>
+   <button ng-click="get_songs()">get songs</button><br>
+  </div>
+  <script>
+    function gotPlay(obj,txt) {
+        console.log(obj);
+        alert(txt);
+    }
+  </script>
+ </body>
+</html>
