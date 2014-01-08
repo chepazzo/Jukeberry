@@ -19,8 +19,10 @@ proc = None
 mpg123 = None
 songlist = {}
 
-fin, fout = os.popen4(["which", "mpg123"])
-mpg123 = fout.read().replace("\n", "")
+#fin, fout = subprocess.Popen(["which", "mpg123"])
+#mpg123 = fout.read().replace("\n", "")
+p=subprocess.Popen(["which", "mpg123"],stdin=subprocess.PIPE,stdout=subprocess.PIPE)
+mpg123 = p.stdout.read().replace("\n", "")
 
 #pygame.mixer.init()
 def start_jukebox():
