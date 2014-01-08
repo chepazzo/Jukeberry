@@ -94,6 +94,9 @@ def get_songlist():
 def add():
     global currsong
     global playlist
+    # 'path' should be used only for testing.
+    # For production, we probably don't want to allow
+    # someone to send a filesys path!
     if not request.json or not 'path' in request.json:
         abort(400)
     songpath = request.json.get('path',None)
