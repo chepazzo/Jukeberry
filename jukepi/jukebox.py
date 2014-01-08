@@ -107,6 +107,8 @@ def add():
     return "added",songpath
 
 if __name__ == '__main__':
+    import sys
+    '''
     stime = time.time()
     medialib = '/var/media/music/'
     songlist = catalog.SongCatalog()
@@ -116,4 +118,10 @@ if __name__ == '__main__':
     print
     print
     print len(songlist),"songs cataloged in",dtime,"seconds."
-    app.run(debug = True)
+    '''
+    if 'debug' in sys.argv:
+        print "Flask DEBUG"
+        app.run(debug = True)
+    else:
+        print "Flask Production"
+        app.run(host='0.0.0.0')
