@@ -106,7 +106,7 @@ def add():
 
 if __name__ == '__main__':
     stime = time.time()
-    medialib = '/opt/OLD/opt/Send Home/KDZ Music/'
+    medialib = '/var/media/music/'
     songlist = catalog.SongCatalog()
     songlist.index(medialib)
     etime = time.time()
