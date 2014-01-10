@@ -2,13 +2,11 @@ import os
 
 import eyed3
 import eyed3.mp3
-#from mutagen.easyid3 import EasyID3
-#from mutagen.mp3 import MP3, HeaderNotFoundError
-#from mutagen.id3 import ID3NoHeaderError
 
 import time
 
 class Song(object):
+
     def __init__(self,filename,
         artist = None,
         title = None,
