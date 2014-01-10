@@ -1,9 +1,8 @@
 import os
-
+import time
+import json
 import eyed3
 import eyed3.mp3
-
-import time
 
 class Song(object):
 
@@ -20,6 +19,18 @@ class Song(object):
         self.genre = genre
         self.year = year
         self.id = None
+
+    def _serialize(self,fields=None,skip=None):
+        retval = {}
+        if fields is None:
+            fields = self.__dict__.keys()
+        if skip is None:
+            skip = []
+        for f in fields:
+            if f in skip:
+                continue
+            retval[f] = getattr(self,f,None)
+        return retval
 
     def save(self):
         pass

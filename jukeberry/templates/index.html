@@ -22,9 +22,9 @@
             $http(
                 {method: method, url: url}
             ).success(function(data, status) {
-                gotPlay(data,status);
+                gotSongs(data,status);
             }).error(function(data, status) {
-                gotPlay(data,status);
+                gotSongs(data,status);
             });
         };
     }
@@ -34,12 +34,50 @@
   <div ng-controller="JukeCtrl">
    <button ng-click="play('/var/media/music/a/Mr. Bungle - Sixteen tons.mp3')">play '16 Tons'</button><br>
    <button ng-click="get_songs()">get songs</button><br>
+   <div id=songlist>
+    <table>
+     {% for songs in songlist.values() %}
+     {% for song in songs %}
+     <tr>
+        <td>{{song.artist}}</td>
+        <td><span ng-click="play('{{song.filename}}')">{{song.title}}</span></td>
+     </tr>
+     {% endfor %}
+     {% endfor %}
+    </table>
+   </div>
   </div>
   <script>
+ function clearElements(element) {
+    var len = element.childNodes.length;
+    for (var cIdx = 0; cIdx < len; cIdx++) {
+        element.removeChild(element.firstChild);
+    }
+ }
+
     function gotPlay(obj,txt) {
         console.log(obj);
-        alert(txt);
+        console.log(txt);
     }
+
+    function gotSongs(obj,txt) {
+        console.log(obj);
+        var div = document.getElementById('songlist');
+        clearElements(div);
+        var table = document.createElement('table');
+        div.appendChild(table);
+        for (artist in obj) {
+            for (sidx in obj[artist]) {
+                var song = obj[artist][sidx];
+                var row = table.insertRow(-1);
+                var aCell = row.insertCell(-1);
+                var sCell = row.insertCell(-1);
+                aCell.appendChild(document.createTextNode(artist));
+                sCell.appendChild(document.createTextNode(song.title));
+            }
+        }
+    }
+
   </script>
  </body>
 </html>

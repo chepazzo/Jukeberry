@@ -19,7 +19,7 @@ def top():
 
 @app.route('/index.html')
 def index():
-    return render_template('index.html')
+    return render_template('index.html',songlist=JUKE.songlist.list_all_songs_by_artist())
 
 @app.route('/start')
 def start():
@@ -33,7 +33,8 @@ def get_playlist():
 @app.route('/get/songs')
 def get_songlist():
     songs = JUKE.songlist.list_all_songs_by_artist()
-    retval = {a:[{'artist':s.artist,'title':s.title} for s in songs[a]] for a in songs.keys()}
+    retval = {a:[s._serialize() for s in songs[a]] for a in songs.keys()}
+    #retval = {a:[s._serialize(skip=['filename']) for s in songs[a]] for a in songs.keys()}
     return json.dumps(retval)
 
 @app.route('/add', methods = ['POST'])
