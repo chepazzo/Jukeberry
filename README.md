@@ -9,10 +9,10 @@ This will consist of two parts:
 
 1. The Controller:
   * Controls the playing of music and catalog, etc.
-  * Controlled by REST API (currently Flask)
+  * Controlled by ReST API (currently Flask)
 
 2. The Web Interface:
-  * Basic web interface using Javascript AJAX to communicate with the Controller via REST API.
+  * Basic web interface using AngularJS and Flask templates
   * Web interface will default to assume controller is local and connect to localhost:5000
 
 ToDo
@@ -30,7 +30,7 @@ v0.1:
 
 v0.2: 
 * Song catalog.
-  * Basic browse by artist --> song
+  * Crappy browse by artist --> song
   * Click song to add to queue.
 
 v1.0:
