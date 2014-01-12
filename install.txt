@@ -21,8 +21,11 @@ ln -s /usr/bin/pip2 /usr/bin/pip
 ## Update /etc/fstab
 echo '/dev/root  /  ext4  noatime,discard  0  0' >> /etc/fstab
 echo 'tmpfs   /var/log        tmpfs   nodev,nosuid,size=16M   0       0' >> /etc/fstab
-echo '/dev/sda1  /var/media/music/usb1           auto    defaults        0       0' >> /etc/fstab
-echo '/dev/sdb1  /var/media/music/usb2           auto    defaults        0       0' >> /etc/fstab
+echo '/dev/sda1  /var/media/music/usb1           auto    defaults,nofail        0       0' >> /etc/fstab
+echo '/dev/sdb1  /var/media/music/usb2           auto    defaults,nofail        0       0' >> /etc/fstab
+
+sh -c 'echo "KERNEL==\"sda\", RUN+=\"/bin/mount /var/media/music/usb1\"" >> /etc/udev/rules.d/99-mount.rules'
+sh -c 'echo "KERNEL==\"sdb\", RUN+=\"/bin/mount /var/media/music/usb2\"" >> /etc/udev/rules.d/99-mount.rules'
 
 rm -R /var/log
 reboot
