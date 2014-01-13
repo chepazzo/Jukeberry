@@ -26,11 +26,11 @@ def start():
     JUKE.start_jukebox()
     return "Jukebox Started!"
 
-@app.route('/get/list')
+@app.route('/get/playlist')
 def get_playlist():
     return json.dumps(JUKE.playlist)
 
-@app.route('/get/songs')
+@app.route('/get/songlist')
 def get_songlist():
     songs = JUKE.songlist.list_all_songs_by_artist()
     retval = {a:[s._serialize() for s in songs[a]] for a in songs.keys()}
