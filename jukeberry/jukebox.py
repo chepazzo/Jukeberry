@@ -49,9 +49,14 @@ class Jukebox(object):
         ## Clear current playing song
         self.currsong = None
         song = self.get_next_song()
-        if song is not None:
+        filename = None
+        if type(song) == catalog.Song:
+            filename = song.filename
+        else:
+            filename = song
+        if filename is not None:
             self.currsong = song
-            currthread = utils._popenAndCall(self.play_next_song,([self.player,song],))
+            currthread = utils._popenAndCall(self.play_next_song,([self.player,filename],))
 
     def add_songs_to_playlist(self,**kwargs):
         songs = self.catalog.get_songs_by_keyword(**kwargs)

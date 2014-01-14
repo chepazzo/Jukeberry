@@ -14,8 +14,8 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
   <script>
     function JukeCtrl($scope,$http) {
-        $scope.play = function(song) {
-            var data = {'path':song};
+        $scope.play = function(artist,title) {
+            var data = {'artist':artist,'title':title};
             var url = '{{url_for('add')}}';
             var method = 'POST';
             $http(
@@ -48,7 +48,7 @@
      {% for song in songs %}
      <tr>
         <td><span class='artist'>{{song.artist}}</span></td>
-        <td><span class='title clickable' ng-click="play('{{song.filename}}')">{{song.title}}</span></td>
+        <td><span class='title clickable' ng-click="play('{{song.artist}}','{{song.title}}')">{{song.title}}</span></td>
      </tr>
      {% endfor %}
      {% endfor %}

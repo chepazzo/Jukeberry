@@ -42,17 +42,22 @@ def add():
     # 'path' should be used only for testing.
     # For production, we probably don't want to allow
     # someone to send a filesys path!
-    if not request.json or not 'path' in request.json:
-        abort(400)
-    songpath = request.json.get('path',None)
-    if os.path.isfile(songpath):
-        JUKE.playlist.append(songpath)
-    else:
-        return "%s file does not exist."%songpath
-    print "Added %s"%songpath
-    print "Starting Jukebox"
+    #if not request.json or not 'path' in request.json:
+    #    abort(400)
+    #songpath = request.json.get('path',None)
+    pp(request.json)
+    songs = JUKE.songlist.get_songs_by_keyword(**request.json)
+    pp([s._serialize() for s in songs])
+    for song in songs:
+        songpath = song.filename
+        if os.path.isfile(songpath):
+            JUKE.playlist.append(songpath)
+        else:
+            return "%s file does not exist."%songpath
+        print "Added %s"%songpath
+        print "Starting Jukebox"
     JUKE.start_jukebox()
-    return "added",songpath
+    return "added %s"%str([s.title for s in songs])
 
 if __name__ == '__main__':
     import sys
