@@ -118,6 +118,13 @@ class SongCatalog(list):
         d = {a:self.get_songs_by_artist(a) for a in self.list_artists()}
         return d
 
+    def get_songs_by_keyword(self,**kwargs):
+        apl = [s for s in self]
+        for f in kwargs.keys():
+            v = kwargs[f]
+            apl = [s for s in apl if getattr(s,f,None) == v]
+        return apl
+
     def list_artists(self):
         artists = {s.artist:1 for s in self}.keys()
         return artists

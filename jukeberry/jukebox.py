@@ -53,6 +53,10 @@ class Jukebox(object):
             self.currsong = song
             currthread = utils._popenAndCall(self.play_next_song,([self.player,song],))
 
+    def add_songs_to_playlist(self,**kwargs):
+        songs = self.catalog.get_songs_by_keyword(**kwargs)
+        self.playlist.extend(songs)
+
     def get_next_song(self):
         songpath = None
         if len(self.playlist) > 0:
