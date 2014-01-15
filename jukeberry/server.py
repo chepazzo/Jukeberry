@@ -19,7 +19,11 @@ def top():
 
 @app.route('/index.html')
 def index():
-    return render_template('index.html',songlist=JUKE.songlist.list_all_songs_by_artist())
+    return render_template('index.html',
+        json=json,
+        currsong=JUKE.currsong,
+        songlist=JUKE.songlist.list_all_songs_by_artist(),
+        playlist=JUKE.playlist)
 
 @app.route('/start')
 def start():
@@ -51,7 +55,8 @@ def add():
     for song in songs:
         songpath = song.filename
         if os.path.isfile(songpath):
-            JUKE.playlist.append(songpath)
+            JUKE.playlist.append(song)
+            #JUKE.playlist.append(songpath)
         else:
             return "%s file does not exist."%songpath
         print "Added %s"%songpath

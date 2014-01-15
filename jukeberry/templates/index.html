@@ -1,7 +1,12 @@
 <!doctype html>
 <html ng-app>
  <head>
+ <title>Jukeberry</title>
   <style>
+ html {
+    font-size: 11px;
+    font-family:sans-serif;
+ }
  .clickable {
     cursor:pointer;
     color:blue;
@@ -9,6 +14,23 @@
  .clickable:hover {
     color:red;
     text-decoration:underline;
+ }
+ .label {
+    font-weight:bold;
+ }
+ div#body,div#head {
+    margin:auto;
+    width: 320px;
+ }
+ #head div#title {
+    text-align:center;
+    font-size: 3em;
+ }
+ div.label {
+    font-size: 1.5em;
+ }
+ div.section {
+    margin-top: 5px;
  }
   </style>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
@@ -41,20 +63,48 @@
   </script>
  </head>
  <body>
-  <div ng-controller="JukeCtrl">
-   <div id=songlist>
-    <table>
-     {% for songs in songlist.values() %}
-     {% for song in songs %}
-     <tr>
-        <td><span class='artist'>{{song.artist}}</span></td>
-        <td><span class='title clickable' ng-click="play('{{song.artist}}','{{song.title}}')">{{song.title}}</span></td>
-     </tr>
-     {% endfor %}
-     {% endfor %}
-    </table>
+  <div id='head'>
+   <div id='title'>Jukeberry</div>
+  </div><!-- id='head' -->
+  <div id='body'>
+   <div ng-controller="JukeCtrl">
+    <div id='currsong' class='section'>
+     <span class='label'>Currently Playing:</span> 
+    {% if currsong is none %}
+        Nothing!
+    {% else %}
+        <span class='name'>{{currsong.title}}</span> by <span class='artist'>{{currsong.artist}}</span>
+    {% endif %}
+    </div><!-- id='currsong' -->
+    <div id='playlist' class='section'>
+     <span class='label'>Next Up:</span>
+     {% if playlist|length == 0 %}
+       Nothing!
+     {% elif playlist|length == 1 %}
+          <span class='name'>{{playlist[0].title}}</span> by <span class='artist'>{{playlist[0].artist}}</span>
+     {% else %}
+      <ol>
+       {% for song in playlist %}
+          <li><span class='name'>{{song.title}}</span> by <span class='artist'>{{song.artist}}</span></li>
+       {% endfor %}
+      </ol>
+     {% endif %}
+    </div><!-- id='playlist' -->
+    <div id='songlist' class='section'>
+     <div class='label'>Select a song:</div>
+     <table>
+      {% for songs in songlist.values() %}
+        {% for song in songs %}
+         <tr>
+           <td><span class='artist'>{{song.artist}}</span></td>
+           <td><span class='name clickable' ng-click='play({{json.dumps(song.artist)}},{{json.dumps(song.title)}})'>{{song.title}}</span></td>
+         </tr>
+        {% endfor %}
+      {% endfor %}
+     </table>
+    </div><!-- id='songlist' -->
    </div>
-  </div>
+  </div><!-- id='body' -->
   <script>
  function clearElements(element) {
     var len = element.childNodes.length;
