@@ -1,0 +1,13 @@
+##
+## upstart .conf file 
+## Use for installing on debian (Ubuntu, mint) as a service
+##
+## Install as:
+## /etc/init/jukeberry.conf
+##
+## To start service manually:
+## service jukeberry start
+##
+exec /usr/local/bin/start_jukeberry_server
+start on startup
+
