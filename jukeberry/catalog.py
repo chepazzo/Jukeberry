@@ -88,7 +88,9 @@ class SongCatalog(list):
             return None
         if id3 is None:
             return None
-        genre = id3.tag.genre
+        if getattr(id3,'tag',None) is None:
+            return None
+        genre = getattr(id3.tag,'genre',None)
         if genre:
             genre = genre.name
         tags = {
