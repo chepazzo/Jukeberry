@@ -32,7 +32,8 @@ def start():
 
 @app.route('/get/playlist')
 def get_playlist():
-    return json.dumps(JUKE.playlist)
+    retval = [s._serialize() for s in JUKE.playlist]
+    return json.dumps(retval)
 
 @app.route('/get/songlist')
 def get_songlist():
