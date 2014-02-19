@@ -50,6 +50,12 @@ def add():
     #if not request.json or not 'path' in request.json:
     #    abort(400)
     #songpath = request.json.get('path',None)
+    #if 'path' in request.json:
+    #    songpath = request.json.get('path',None)
+    #    JUKE.playlist.append(songpath)
+    print request.json
+    #    JUKE.start_jukebox()
+    #    return "yay"
     pp(request.json)
     songs = JUKE.songlist.get_songs_by_keyword(**request.json)
     pp([s._serialize() for s in songs])

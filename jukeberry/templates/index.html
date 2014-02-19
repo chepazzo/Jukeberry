@@ -2,6 +2,7 @@
 <html ng-app>
  <head>
  <title>Jukeberry</title>
+ <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='MISHAP.css')}}" />
   <style>
  html {
     font-size: 11px;
@@ -34,6 +35,7 @@
  }
   </style>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
+  <script src="{{url_for('static',filename='MISHAP3.js')}}"></script>
   <script>
     function JukeCtrl($scope,$http) {
         $scope.play = function(artist,title) {
@@ -67,6 +69,7 @@
    <div id='title'>Jukeberry</div>
   </div><!-- id='head' -->
   <div id='body'>
+   <button onclick='play16tons()'>click me</button>
    <div ng-controller="JukeCtrl">
     <div id='currsong' class='section'>
      <span class='label'>Currently Playing:</span> 
@@ -136,6 +139,34 @@
         }
     }
 
+ MISHAP.AJAX.sendJSON = function (script,formData,callback,instance) {
+    var req    = new XMLHttpRequest();
+    req.onreadystatechange = function() {
+        if (req.readyState == 4) { if (req.status == 200) {
+            if (typeof(instance) == 'undefined') {
+                callback(eval('(' + req.responseText + ')'));
+            } else {
+                callback.call(instance,eval('(' + req.responseText + ')'));
+            }
+        } }
+    };
+    req.open('POST', script, true);
+    if (MISHAP.isString(formData)) {
+        req.setRequestHeader('Content-Type', 'application/json');
+    }
+    req.send(formData);
+ };
+
+    function donesong(obj) {
+        console.log(obj);
+    }
+
+    function play16tons() {
+        var url = 'http://localhost:5000/add';
+        var obj = {'artist':'Mr. Bungle','title':'Sixteen Tons'}
+        var varstr = JSON.stringify(obj);
+        MISHAP.AJAX.sendJSON(url,varstr,donesong);
+    }
   </script>
  </body>
 </html>

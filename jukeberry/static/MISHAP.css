@@ -1,0 +1,334 @@
+ .clickable { 
+    cursor:pointer;
+ }
+.clickable:hover {
+    color:red;
+    text-decoration:underline;
+ }
+
+ bardiv .barcell {
+    height:20px;
+    float:left;
+    padding-left: 2px;
+    padding-right: 2px;
+ }
+
+ bardiv a { display: inline; }
+
+ #loginlogoutdiv span {
+	padding:3px;
+ }
+
+ div.pagedata,edit,bardiv,content,.content {
+	display: block;
+ }
+
+ body.show a.hide, body.hide a.show {
+	display: inline;
+ }
+
+ body.hide a.hide, body.show a.show {
+	display: none;
+ }
+
+ div.pagedata {
+	border: solid thin transparent;
+ }
+
+ bardiv.changed div.changed {
+	border: solid thin red;
+ }
+
+ edit.text{
+	text-align: left;
+/*	display: inline; */
+ }
+
+/* EDIT:  taglist */
+ edit.tagdiv {
+    cursor:text;
+    border:thin solid black;
+    overflow:auto;
+ }
+ edit.tagdiv div.tag {
+    margin:2px;
+    background-color:#F0F0F0;
+    white-space:nowrap;
+    float:left;
+ }
+ edit.tagdiv input {
+    font-size:1em;
+    border:none;
+    float:left;
+ }
+ edit.tagdiv div.taglist {
+    float:left;
+ }
+ edit.tagdiv div.taglist div.tag span {
+    vertical-align:middle;
+    padding:1px;
+ }
+ edit.tagdiv div.taglist div.tag img {
+    vertical-align:middle;
+ }
+
+
+ edit.blank {
+/*	border: solid thin black; */
+	color: blue;
+	font-style: italic;
+	font-weight: normal;
+ }
+
+ .content thead td {
+	font-weight: bold;
+	text-align:center;
+ }
+
+ .content label {
+	display: block;
+	vertical-align: middle;
+	color:#0B32D7;
+	text-align: center;
+ }
+
+ .content label.title {
+	font-size:2em;
+	font-weight: bold;
+ }
+
+ .content label.label {
+	font-size:1.5em;
+	font-weight: bold;
+ }
+
+ .content label.sublabel {
+	font-size:1.25em;
+	font-weight: bold;
+ }
+
+ .content {
+	padding: 10px;
+ }
+
+ .content div.html {
+	text-align: left;
+ }
+
+ .content.edit .text {
+    font-size:1em;
+/*	width: 300px; */
+ }
+
+ .content form {
+	margin: 0px;
+ }
+
+ .List .content .list tr.selected td {
+    color:red;
+ }
+
+ bardiv {
+	height: 25px;
+	display : block;
+	text-align: left;
+ }
+
+ bardiv .bar {	
+	height: 25px;
+ }
+
+ bardiv .barcell {
+	float:left;
+	height:20px;
+	margin-top:2px;
+	padding-left:2px;
+	padding-right:2px;
+ }
+
+ bardiv a {
+	display: block;
+	width: 100%;
+ }
+
+ bardiv #saveimg {
+	border: solid transparent 2px;
+ }
+
+ bardiv #saveimg:hover {
+	border: inset 2px;
+	text-decoration: none;
+	color: black;
+ }
+
+ bardiv #viewimg {
+	border: solid transparent 2px;
+ }
+
+ bardiv.view #viewimg {
+	display: none;
+ }
+
+ bardiv.edit #viewimg {
+	display: inline;
+ }
+
+ bardiv #viewimg:hover {
+	border: inset 2px;
+	color: black;
+	text-decoration: none;
+ }
+ bardiv #editimg {
+	border: solid transparent 2px;
+ }
+
+ bardiv.edit #editimg {
+	display: none;
+ }
+
+ bardiv.view #editimg {
+	display: inline;
+ }
+
+ bardiv #editimg:hover {
+	border: inset 2px;
+	color: black;
+	text-decoration: none;
+ }
+
+ td.label {
+	vertical-align: middle;
+	font-weight: bold;
+	text-align: right;
+ }
+
+ td.text {
+	vertical-align: middle;
+	font-weight: normal;
+	text-align: left;
+ }
+
+ body.hide bardiv,
+ body.hide bardiv.view,
+ body.hide bardiv.edit,
+ bardiv { display:none; }
+
+ bardiv.edit,
+ bardiv.view { display: block; }
+
+ body.show bardiv {
+	display: block;
+ }
+
+ .required {
+    border-color: #FF0000;
+    background-color:#FFF0F0;
+ }
+
+ .tabbeddisplay .tabgrid td.left {
+	vertical-align: top;
+ }
+
+ .tabbeddisplay .tabgroup .top {
+	bottom: -1px;
+	padding: 0px 8px 0px 0px;
+	margin: 0px;
+	position: relative;
+	z-index: 2;
+ }
+
+ .tabbeddisplay .tabgroup .left {
+	padding: 0px 0px 8px 0px;
+	margin: 0px;
+	position: relative;
+	z-index: 2;
+ }
+
+ .tabbeddisplay .tabbed .tabgroup .left {
+	right: -1px;
+ }
+
+ .tabbeddisplay .tabgroup .top td {
+	vertical-align: bottom;
+	border: 0px none;
+	margin: 0px;
+	padding: 0px;
+ }
+
+ .tabbeddisplay .tabgroup .left td {
+	border: 0px none;
+	margin: 0px;
+	padding: 0px;
+ }
+
+ .tabbeddisplay .tabbed .tabgroup .left td {
+	text-align: right;
+ }
+
+ .tabbeddisplay .tabgroup .top .tab {
+	margin: 0px;
+	padding: 0px 0px 0px 8px;
+ }
+
+ .tabbeddisplay .tabgroup .left .tab {
+	margin: 0px;
+	padding: 8px 0px 0px 0px;
+ }
+
+ .tabbeddisplay .tabgroup .tab a {
+	text-decoration: none;
+	display: block;
+	white-space: nowrap;
+ }
+
+ .tabbeddisplay .tab a {
+	border: solid 1px #C0C0C0;
+	background: #F0F0F0;
+ }
+
+ .tabbeddisplay .tabgroup .left .tab a {
+	border-bottom-color: black;
+ }
+
+ .tabbeddisplay .tabgroup .top .tab a {
+	border-right-color: black;
+ }
+
+ .tabbeddisplay .tabgroup .top .tab a {
+	padding-top: 1px;
+	padding-right: 0.5em;
+	padding-left: 0.5em;
+	padding-bottom: 2px;
+	vertical-align: text-bottom;
+	margin-bottom: 0px;
+ }
+
+ .tabbeddisplay .tabgroup .left .tab a {
+	padding-left: 9px;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+	padding-right: 10px;
+	vertical-align: text-bottom;
+	margin-right: 0px;
+ }
+
+ .tabbeddisplay .tabgroup .top .selected a {
+	border-bottom: solid 1px white;
+	background: white;
+ }
+
+ .tabbeddisplay .tabbed .tabgroup .left .selected a {
+	border-right: solid 1px white;
+	background: white;
+ }
+
+ .tabbeddisplay .tabSlides {
+	padding: 5px;
+	border: solid 1px #C0C0C0;
+	z-index: 1;
+ }
+
+ .tabbeddisplay .tabgroup .disabled a {
+	cursor: not-allowed;
+	background: #C0C0C0;
+ }
