@@ -19,6 +19,40 @@
  .label {
     font-weight:bold;
  }
+ #raspi {
+    margin:auto;
+    width: 320px;
+    height: 240px;
+    border: solid black thin;
+ }
+ #raspi div.view {
+    width: 318px;
+    height: 45px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 20px;
+ }
+ #raspi div.frame {
+    /* raspi width 
+       - 2 (raspi border)
+       ÷ 7 (# tiles)
+       - 11 (size of text)
+       - 2 (tile border)
+       - 2 (tile margin)
+       ÷ 2 ==> 15 (required tile padding)
+     */
+    width: 315px; /* 45px * 7 across */
+    height: 225px; /* 45px * 5 down */
+    margin: 6px 1px;
+ }
+ #raspi div.tile {
+    width: 11px;
+    height: 11px;
+    border: solid thin black;
+    margin: 1px;
+    padding: 15px;
+    float: left;
+ }
  div#body,div#head {
     margin:auto;
     width: 320px;
@@ -65,6 +99,14 @@
   </script>
  </head>
  <body>
+  <div id='raspi'>
+    <div class='view'>Artist</div><!-- id='view' -->
+    <div class='frame'>
+      {% for l in list('#ABCDEFGHIJKLMNOPQRSTUVWXYZ') %}
+       <div class='tile'>{{l}}</div>
+      {% endfor %}
+    </div><!-- class='frame' -->
+  </div><!-- id='raspi' -->
   <div id='head'>
    <div id='title'>Jukeberry</div>
   </div><!-- id='head' -->
