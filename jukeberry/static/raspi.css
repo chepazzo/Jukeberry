@@ -1,0 +1,35 @@
+ #raspi {
+    margin:auto;
+    width: 320px;
+    height: 240px;
+    border: solid black thin;
+ }
+ #raspi div.view {
+    width: 318px;
+    height: 45px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 20px;
+ }
+ #raspi div.frame {
+    /* raspi width 
+       - 2 (raspi border)
+       ÷ 7 (# tiles)
+       - 11 (size of text)
+       - 2 (tile border)
+       - 2 (tile margin)
+       ÷ 2 ==> 15 (required tile padding)
+     */
+    width: 315px; /* 45px * 7 across */
+    height: 225px; /* 45px * 5 down */
+    margin: 6px 1px;
+ }
+ #raspi div.tile {
+    width: 11px;
+    height: 11px;
+    border: solid thin black;
+    margin: 1px;
+    padding: 15px;
+    float: left;
+ }
+

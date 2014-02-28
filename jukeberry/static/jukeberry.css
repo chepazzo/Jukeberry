@@ -1,0 +1,30 @@
+ html {
+    font-size: 11px;
+    font-family:sans-serif;
+ }
+ .clickable {
+    cursor:pointer;
+    color:blue;
+ }
+ .clickable:hover {
+    color:red;
+    text-decoration:underline;
+ }
+ .label {
+    font-weight:bold;
+ }
+ div#body,div#head {
+    margin:auto;
+    width: 320px;
+ }
+ #head div#title {
+    text-align:center;
+    font-size: 3em;
+ }
+ div.label {
+    font-size: 1.5em;
+ }
+ div.section {
+    margin-top: 5px;
+ }
+

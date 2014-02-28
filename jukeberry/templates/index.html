@@ -1,37 +1,10 @@
 <!doctype html>
 <html ng-app>
  <head>
- <title>Jukeberry</title>
+  <title>Jukeberry</title>
+  <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='raspi.css')}}" />
+  <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='jukeberry.css')}}" />
   <style>
- html {
-    font-size: 11px;
-    font-family:sans-serif;
- }
- .clickable {
-    cursor:pointer;
-    color:blue;
- }
- .clickable:hover {
-    color:red;
-    text-decoration:underline;
- }
- .label {
-    font-weight:bold;
- }
- div#body,div#head {
-    margin:auto;
-    width: 320px;
- }
- #head div#title {
-    text-align:center;
-    font-size: 3em;
- }
- div.label {
-    font-size: 1.5em;
- }
- div.section {
-    margin-top: 5px;
- }
   </style>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
   <script>
@@ -63,6 +36,14 @@
   </script>
  </head>
  <body>
+  <div id='raspi'>
+    <div class='view'>Artist</div><!-- id='view' -->
+    <div class='frame'>
+      {% for l in list('#ABCDEFGHIJKLMNOPQRSTUVWXYZ') %}
+       <div class='tile'>{{l}}</div>
+      {% endfor %}
+    </div><!-- class='frame' -->
+  </div><!-- id='raspi' -->
   <div id='head'>
    <div id='title'>Jukeberry</div>
   </div><!-- id='head' -->

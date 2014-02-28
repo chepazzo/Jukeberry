@@ -20,6 +20,7 @@ def top():
 @app.route('/index.html')
 def index():
     return render_template('index.html',
+        list=list,
         json=json,
         currsong=JUKE.currsong,
         songlist=JUKE.songlist.list_all_songs_by_artist(),
