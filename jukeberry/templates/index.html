@@ -5,56 +5,42 @@
   <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='raspi.css')}}" />
   <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='jukeberry.css')}}" />
   <style>
+#raspi { display: none; }
+#body.raspi {
+    margin:auto;
+    width: 320px;
+    height: 240px;
+    border: solid black thin;
+    overflow: auto;
+}
   </style>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
+  <script src="JukeCtrl.js">
   <script>
-    function JukeCtrl($scope,$http) {
-        $scope.play = function(artist,title) {
-            var data = {'artist':artist,'title':title};
-            var url = '{{url_for('add')}}';
-            var method = 'POST';
-            $http(
-                {method: method, url: url,data: JSON.stringify(data)}
-            ).success(function(data, status) {
-                gotPlay(data,status);
-            }).error(function(data, status) {
-                gotPlay(data,status);
-            });
-        };
-        $scope.get_songs = function() {
-            var url = '{{url_for('get_songlist')}}';
-            var method = 'GET';
-            $http(
-                {method: method, url: url}
-            ).success(function(data, status) {
-                gotSongs(data,status);
-            }).error(function(data, status) {
-                gotSongs(data,status);
-            });
-        };
-    }
   </script>
  </head>
  <body>
   <div id='raspi'>
     <div class='view'>Artist</div><!-- id='view' -->
     <div class='frame'>
-      {% for l in list('#ABCDEFGHIJKLMNOPQRSTUVWXYZ') %}
-       <div class='tile'>{{l}}</div>
+       <div class='tile clickable'>⇱</div>
+       <div class='tile clickable'>#</div>
+      {% for l in list('ABCDEFGHIJKLMNOPQRSTUVWXYZ') %}
+       <div class='tile clickable'>{{l}}</div>
       {% endfor %}
     </div><!-- class='frame' -->
   </div><!-- id='raspi' -->
   <div id='head'>
    <div id='title'>Jukeberry</div>
   </div><!-- id='head' -->
-  <div id='body'>
+  <div id='body' class='raspi'>
    <div ng-controller="JukeCtrl">
     <div id='currsong' class='section'>
      <span class='label'>Currently Playing:</span> 
     {% if currsong is none %}
         Nothing!
     {% else %}
-        <span class='name'>{{currsong.title}}</span> by <span class='artist'>{{currsong.artist}}</span>
+        <span class='name'>{{currsong.title}}</span> by <span class='artist'>{{', '.join(currsong.artist)}}</span>
     {% endif %}
     </div><!-- id='currsong' -->
     <div id='playlist' class='section'>
@@ -62,28 +48,18 @@
      {% if playlist|length == 0 %}
        Nothing!
      {% elif playlist|length == 1 %}
-          <span class='name'>{{playlist[0].title}}</span> by <span class='artist'>{{playlist[0].artist}}</span>
+          <span class='name'>{{playlist[0].title}}</span> by <span class='artist'>{{', '.join(playlist[0].artist)}}</span>
      {% else %}
       <ol>
        {% for song in playlist %}
-          <li><span class='name'>{{song.title}}</span> by <span class='artist'>{{song.artist}}</span></li>
+          <li><span class='name'>{{song.title}}</span> by <span class='artist'>{{', '.join(song.artist)}}</span></li>
        {% endfor %}
       </ol>
      {% endif %}
     </div><!-- id='playlist' -->
-    <div id='songlist' class='section'>
-     <div class='label'>Select a song:</div>
-     <table>
-      {% for songs in songlist.values() %}
-        {% for song in songs %}
-         <tr>
-           <td><span class='artist'>{{song.artist}}</span></td>
-           <td><span class='name clickable' ng-click='play({{json.dumps(song.artist)}},{{json.dumps(song.title)}})'>{{song.title}}</span></td>
-         </tr>
-        {% endfor %}
-      {% endfor %}
-     </table>
-    </div><!-- id='songlist' -->
+    <div id='addsongs' class='section'>
+     <a href='/artists.html'>Add Songs</a>
+    </div><!-- id='addsongs' -->
    </div>
   </div><!-- id='body' -->
   <script>

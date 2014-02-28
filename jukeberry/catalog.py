@@ -12,6 +12,8 @@ class Song(object):
         album = None,
         genre = None,
         year = None):
+        if artist is None:
+            artist = []
         self.filename = filename
         self.artist = artist
         self.title = title
@@ -105,7 +107,7 @@ class SongCatalog(list):
                 filename + " - skipping file"
             return None
         song = Song(filename,
-            artist=tags["artist"],
+            artist=tags["artist"].split('/'),
             album=tags["album"],
             genre=tags["genre"],
             title=tags["title"],
@@ -128,17 +130,19 @@ class SongCatalog(list):
         return apl
 
     def list_artists(self):
-        artists = {s.artist:1 for s in self}.keys()
+        artists = set();
+        for s in self:
+            artists.update(s.artist)
         return artists
 
     def get_songs_by_artist(self,artist):
         ''' Returns list of songs by exact match '''
-        songs = [s for s in self if artist.lower() == s.artist.lower()]
+        songs = [s for s in self if artist.lower() in [a.lower() for a in s.artist]]
         return songs 
 
     def find_songs_by_artist(self,artist):
         ''' Returns list of songs by substring match '''
-        songs = [s for s in self if artist.lower() in s.artist.lower()]
+        songs = [s for s in self if artist.lower() in ''.join(s.artist).lower()]
         return songs 
 
 if __name__ == '__main__':

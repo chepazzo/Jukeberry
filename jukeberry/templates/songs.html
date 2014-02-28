@@ -1,0 +1,38 @@
+<!doctype html>
+<html ng-app>
+ <head>
+  <title>Jukeberry</title>
+  <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='jukeberry.css')}}" />
+  <style>
+#body.raspi {
+    margin:auto;
+    width: 320px;
+    height: 240px;
+    border: solid black thin;
+    overflow: auto;
+}
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
+  <script src="JukeCtrl.js">
+  <script>
+  </script>
+ </head>
+ <body>
+  <div id='head'>
+   <div id='title'>Jukeberry</div>
+  </div><!-- id='head' -->
+  <div id='body' class='raspi'>
+   <div><a href='/artists.html'>⇱ back</a></div>
+   <div ng-controller="JukeCtrl">
+    <div id='songlist' class='section'>
+     <div class='label'>Songs by {{artist}}:</div>
+      <ol>
+      {% for song in songs %}
+        <li><span class='name clickable' ng-click='play({{json.dumps(song.artist)}},{{json.dumps(song.title)}})'>{{song.title}}</span></li>
+      {% endfor %}
+      </ol>
+    </div><!-- id='songlist' -->
+   </div>
+  </div><!-- id='body' -->
+ </body>
+</html>

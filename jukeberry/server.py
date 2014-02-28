@@ -26,6 +26,25 @@ def index():
         songlist=JUKE.songlist.list_all_songs_by_artist(),
         playlist=JUKE.playlist)
 
+@app.route('/JukeCtrl.js')
+def jukectrljs():
+    return render_template('JukeCtrl.js')
+
+@app.route('/artists.html')
+def artists():
+    return render_template('artists.html',
+        artists=JUKE.songlist.list_artists()
+    )
+
+@app.route('/songs.html')
+def songs():
+    artist = request.args.get('artist')
+    return render_template('songs.html',
+        json=json,
+        songs=JUKE.songlist.get_songs_by_artist(artist),
+        artist=artist
+    )
+
 @app.route('/start')
 def start():
     JUKE.start_jukebox()
