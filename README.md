@@ -40,3 +40,6 @@ v1.0:
 * Music Lib can be remote.
   * Needs web admin interface to add remote lib
   * Not sure how to implement the admin perms.  nfs might be bad.  want to avoid smb.
+* Sync to playlists on local mobile devices.
+  * Requires client app on phone.
+  * Allows for consolidated playlists if named the same.
