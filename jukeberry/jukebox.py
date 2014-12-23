@@ -15,6 +15,8 @@ import time
 from pprint import pprint as pp
 
 PLAYER = 'mpg123'
+## omxplayer has MUCH better sound quality on Raspi
+#PLAYER = 'omxplayer'
 LIB = '/var/media/music/'
 
 class Jukebox(object):
