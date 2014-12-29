@@ -45,23 +45,23 @@ def songs():
 
 ## API
 
-@app.route('/get/playlist')
+@app.route('/loadcatalog')
 def load_catalog():
     JUKE.load_catalog()
     retval = [s._serialize() for s in JUKE.playlist]
-    return jsonify(succ(retval))
+    return jsonify(succ(value=retval))
 
 @app.route('/get/playlist')
 def get_playlist():
     retval = [s._serialize() for s in JUKE.playlist]
-    return jsonify(succ(retval))
+    return jsonify(succ(value=retval))
 
 @app.route('/get/songlist')
 def get_songlist():
     songs = JUKE.songlist.list_all_songs_by_artist()
     retval = {a:[s._serialize() for s in songs[a]] for a in songs.keys()}
     #retval = {a:[s._serialize(skip=['filename']) for s in songs[a]] for a in songs.keys()}
-    return jsonify(succ(retval))
+    return jsonify(succ(value=retval))
 
 @app.route('/add', methods = ['POST'])
 def add():

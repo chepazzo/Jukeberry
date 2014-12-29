@@ -75,6 +75,9 @@ class SongCatalog(list):
 
     def add_song(self, filename):
         print "Adding %s"%filename
+        if self.find_song(filename):
+            print "WTF: %s already cataloged"%filename
+            return None
         try:
             ismp3 = eyed3.mp3.isMp3File(filename)
         except UnicodeDecodeError:
