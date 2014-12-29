@@ -3,7 +3,7 @@
 ## Add files to playlist via POST to /add:
 ## curl -i -H "Content-Type: application/json" -X POST -d '{"path":"/edia/music/Misc/The Champs - Tequila.mp3"}' http://localhost:5000/add
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 app = Flask(__name__)
 
 import jukebox
@@ -13,12 +13,10 @@ from pprint import pprint as pp
 
 JUKE = jukebox.Jukebox()
 
+## Pages
+
 @app.route('/')
 def top():
-    return "MISHAP JukeBox!"
-
-@app.route('/index.html')
-def index():
     return render_template('index.html',
         list=list,
         json=json,
@@ -45,22 +43,25 @@ def songs():
         artist=artist
     )
 
-@app.route('/start')
-def start():
-    JUKE.start_jukebox()
-    return "Jukebox Started!"
+## API
+
+@app.route('/get/playlist')
+def load_catalog():
+    JUKE.load_catalog()
+    retval = [s._serialize() for s in JUKE.playlist]
+    return jsonify(succ(retval))
 
 @app.route('/get/playlist')
 def get_playlist():
     retval = [s._serialize() for s in JUKE.playlist]
-    return json.dumps(retval)
+    return jsonify(succ(retval))
 
 @app.route('/get/songlist')
 def get_songlist():
     songs = JUKE.songlist.list_all_songs_by_artist()
     retval = {a:[s._serialize() for s in songs[a]] for a in songs.keys()}
     #retval = {a:[s._serialize(skip=['filename']) for s in songs[a]] for a in songs.keys()}
-    return json.dumps(retval)
+    return jsonify(succ(retval))
 
 @app.route('/add', methods = ['POST'])
 def add():
@@ -79,11 +80,27 @@ def add():
             JUKE.playlist.append(song)
             #JUKE.playlist.append(songpath)
         else:
-            return "%s file does not exist."%songpath
+            return jsonify(fail("%s file does not exist."%songpath))
         print "Added %s"%songpath
         print "Starting Jukebox"
     JUKE.start_jukebox()
-    return "added %s"%str([s.title for s in songs])
+    song_titles = [s.title for s in songs]
+    return jsonify(succ(value=song_titles))
+
+## Start/Stop
+@app.route('/start')
+def start():
+    JUKE.start_jukebox()
+    return "Jukebox Started!"
+
+def succ(field='data',value=''):
+    ''' {'stat':'ok', 'data':{} '''
+    return {'stat':'ok',field:value}
+
+def fail(msg='',code=0):
+    ''' {'stat':'fail', 'err':{'msg':'', 'code':0}} '''
+    err = {'msg':msg,'code':code}
+    return {'stat':'fail','err':err}
 
 if __name__ == '__main__':
     import sys

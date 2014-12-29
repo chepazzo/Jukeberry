@@ -6,9 +6,9 @@ function JukeCtrl($scope,$http) {
         $http(
             {method: method, url: url,data: JSON.stringify(data)}
         ).success(function(data, status) {
-            gotPlay(data,status);
+            gotPlay(data.data,status);
         }).error(function(data, status) {
-            gotPlay(data,status);
+            gotPlay(data.data,status);
         });
     };
     $scope.get_songs = function() {
@@ -17,9 +17,9 @@ function JukeCtrl($scope,$http) {
         $http(
             {method: method, url: url}
         ).success(function(data, status) {
-            gotSongs(data,status);
+            gotSongs(data.data,status);
         }).error(function(data, status) {
-            gotSongs(data,status);
+            gotSongs(data.data,status);
         });
     };
 }

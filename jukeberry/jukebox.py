@@ -16,6 +16,12 @@ from pprint import pprint as pp
 
 PLAYER = 'mpg123'
 ## omxplayer has MUCH better sound quality on Raspi
+## I should probably make this an env variable
+##  as well as a config option where default setup
+##  would look for the existance of omxplayer (raspi only)
+##  and set the env var appropriately, but this could be
+##  overwritten by an option in the /etc/jukeberry.conf file
+##  (default=default).
 #PLAYER = 'omxplayer'
 LIB = '/var/media/music/'
 
