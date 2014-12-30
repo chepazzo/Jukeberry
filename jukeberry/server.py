@@ -102,7 +102,7 @@ def fail(msg='',code=0):
     err = {'msg':msg,'code':code}
     return {'stat':'fail','err':err}
 
-if __name__ == '__main__':
+def main():
     import sys
     if 'debug' in sys.argv:
         print "Flask DEBUG"
@@ -110,3 +110,6 @@ if __name__ == '__main__':
     else:
         print "Flask Production"
         app.run(host='0.0.0.0')
+
+if __name__ == '__main__':
+    main()

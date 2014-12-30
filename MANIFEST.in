@@ -1,0 +1,2 @@
+recursive-include jukeberry/templates *
+recursive-include jukeberry/static *

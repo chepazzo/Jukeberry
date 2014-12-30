@@ -1,0 +1,35 @@
+## 
+## How to prepare a Raspberry pi running ArchLinux
+##
+
+echo jukeberry > /etc/hostname
+mkdir -p /var/media/music/{usb1,usb2}
+
+pacman -Syu
+pacman -S mpg123
+pacman -S git
+pacman -S python2
+pacman -S python2-pip
+
+pip2 install eyed3
+pip2 install flask
+
+## Make symlinks
+ln -s /usr/bin/python2 /usr/bin/python
+ln -s /usr/bin/pip2 /usr/bin/pip
+
+## Update /etc/fstab
+echo '/dev/root  /  ext4  noatime,discard  0  0' >> /etc/fstab
+echo 'tmpfs   /var/log        tmpfs   nodev,nosuid,size=16M   0       0' >> /etc/fstab
+echo '/dev/sda1  /var/media/music/usb1           auto    defaults,nofail        0       0' >> /etc/fstab
+echo '/dev/sdb1  /var/media/music/usb2           auto    defaults,nofail        0       0' >> /etc/fstab
+
+sh -c 'echo "KERNEL==\"sda\", RUN+=\"/bin/mount /var/media/music/usb1\"" >> /etc/udev/rules.d/99-mount.rules'
+sh -c 'echo "KERNEL==\"sdb\", RUN+=\"/bin/mount /var/media/music/usb2\"" >> /etc/udev/rules.d/99-mount.rules'
+
+rm -R /var/log
+reboot
+
+## Remove .bash_history (cuts down on writes to the sd card)
+ln -sf ~/.bash_history /dev/null
+

@@ -1,0 +1,13 @@
+
+pacman -Syu
+pacman -S wpa_suppliment
+
+cd /etc/netctl
+install -m640 examples/wireless-wpa wireless-home
+
+## Modify to suit your wifi
+
+netctl start wireless-home
+netctl enable wireless-home
+
+
