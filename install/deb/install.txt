@@ -5,14 +5,11 @@
 echo jukeberry > /etc/hostname
 mkdir -p /var/media/music/{usb1,usb2}
 
-pacman -Syu
-pacman -S mpg123
-pacman -S git
-pacman -S python2
-pacman -S python2-pip
+apt-get update
+apt-get -y mpg321 git python python-pip avahi-daemon
 
-pip2 install eyed3
-pip2 install flask
+pip install --allow-external eyeD3 --allow-unverified eyeD3 eyed3
+pip install flask
 
 ## Make symlinks
 ln -s /usr/bin/python2 /usr/bin/python

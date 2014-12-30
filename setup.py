@@ -21,12 +21,8 @@ desc = __shortdesc__
 long_desc = __doc__
 
 requires = [
-    'six>=1.7.0',
-    'Flask',
-    "python-dateutil",
-    'dnslib',
-    'oslo.config',
-    'IPy',
+    'Flask>=0.10.1',
+    'eyeD3>=0.7.5',
 ]
 
 setup(name=__packagename__,
