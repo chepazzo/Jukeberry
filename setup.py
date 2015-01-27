@@ -35,6 +35,9 @@ setup(name=__packagename__,
     packages=find_packages(),
     install_requires=requires,
     include_package_data=True,
+    scripts=[
+        'bin/juke-loadcatalog',
+    ],
     data_files=[
         ('/etc', ['config/jukeberry.conf']),
         ('/etc/init.d/', ['install/deb/jukeberry']),
@@ -43,7 +46,6 @@ setup(name=__packagename__,
     entry_points={
         'console_scripts': {
             'start_jukeberry = jukeberry.server:main',
-            'juke-loadcatalog = jukeberry.server:load_catalog'
         }
     },
 )
