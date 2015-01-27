@@ -42,7 +42,8 @@ setup(name=__packagename__,
     ],
     entry_points={
         'console_scripts': {
-            'start_jukeberry = jukeberry.server:main'
+            'start_jukeberry = jukeberry.server:main',
+            'juke-loadcatalog = jukeberry.server:load_catalog'
         }
     },
 )
