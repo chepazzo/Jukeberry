@@ -21,7 +21,7 @@ def top():
         list=list,
         json=json,
         currsong=JUKE.currsong,
-        songlist=JUKE.songlist.list_all_songs_by_artist(),
+        songlist=sorted(JUKE.songlist.list_all_songs_by_artist(),key=lambda x: x.title),
         playlist=JUKE.playlist)
 
 @app.route('/JukeCtrl.js')
@@ -31,7 +31,7 @@ def jukectrljs():
 @app.route('/artists.html')
 def artists():
     return render_template('artists.html',
-        artists=JUKE.songlist.list_artists()
+        artists=sorted(JUKE.songlist.list_artists())
     )
 
 @app.route('/songs.html')
