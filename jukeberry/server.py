@@ -17,12 +17,13 @@ JUKE = jukebox.Jukebox()
 
 @app.route('/')
 def top():
-    return render_template('index.html')#,
-    #    list=list,
+    return render_template('index.html',
+        list=list,
     #    json=json,
     #    currsong=JUKE.currsong,
     #    songlist=sorted(JUKE.songlist.list_all_songs_by_artist(),key=lambda x: x.title),
-    #    playlist=JUKE.playlist)
+    #    playlist=JUKE.playlist
+    )
 
 @app.route('/JukeCtrl.js')
 def jukectrljs():
@@ -65,6 +66,18 @@ def get_playlist():
 def get_songlist():
     songs = JUKE.songlist.list_all_songs_by_artist()
     retval = {a:[s._serialize() for s in songs[a]] for a in songs.keys()}
+    #retval = {a:[s._serialize(skip=['filename']) for s in songs[a]] for a in songs.keys()}
+    return jsonify(succ(value=retval))
+
+@app.route('/get/currsong')
+def get_currsong():
+    retval = JUKE.currsong._serialize()
+    #retval = {a:[s._serialize(skip=['filename']) for s in songs[a]] for a in songs.keys()}
+    return jsonify(succ(value=retval))
+
+@app.route('/get/playlist')
+def get_currsong():
+    retval = [s._serialize() for s in JUKE.playlist]
     #retval = {a:[s._serialize(skip=['filename']) for s in songs[a]] for a in songs.keys()}
     return jsonify(succ(value=retval))
 

@@ -1,5 +1,5 @@
 <!doctype html>
-<html ng-app>
+<html ng-app='jukeApp'>
  <head>
   <title>Jukeberry</title>
   <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='raspi.css')}}" />
@@ -15,21 +15,11 @@
 }
   </style>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
-  <script src="JukeCtrl.js">
+  <script src="/JukeCtrl.js">
   <script>
   </script>
  </head>
  <body>
-  <div id='raspi'>
-    <div class='view'>Artist</div><!-- id='view' -->
-    <div class='frame'>
-       <div class='tile clickable'>⇱</div>
-       <div class='tile clickable'>#</div>
-      {% for l in list('ABCDEFGHIJKLMNOPQRSTUVWXYZ') %}
-       <div class='tile clickable'>{{l}}</div>
-      {% endfor %}
-    </div><!-- class='frame' -->
-  </div><!-- id='raspi' -->
   <div id='head'>
    <div id='title'>Jukeberry</div>
   </div><!-- id='head' -->
@@ -37,62 +27,18 @@
    <div ng-controller="JukeCtrl">
     <div id='currsong' class='section'>
      <span class='label'>Currently Playing:</span> 
-    {% if currsong is none %}
-        Nothing!
-    {% else %}
-        <span class='name'>{{currsong.title}}</span> by <span class='artist'>{{', '.join(currsong.artist)}}</span>
-    {% endif %}
+        <span class='name'>{[currsong.title]}</span> by <span class='artist'>{[currsong.artist]}</span>
     </div><!-- id='currsong' -->
     <div id='playlist' class='section'>
      <span class='label'>Next Up:</span>
-     {% if playlist|length == 0 %}
-       Nothing!
-     {% elif playlist|length == 1 %}
-          <span class='name'>{{playlist[0].title}}</span> by <span class='artist'>{{', '.join(playlist[0].artist)}}</span>
-     {% else %}
       <ol>
-       {% for song in playlist %}
-          <li><span class='name'>{{song.title}}</span> by <span class='artist'>{{', '.join(song.artist)}}</span></li>
-       {% endfor %}
+          <li ng-repeat='song in playlist'><span class='name'>{[song.title]}</span> by <span class='artist'>{[song.artist]}</span></li>
       </ol>
-     {% endif %}
     </div><!-- id='playlist' -->
     <div id='addsongs' class='section'>
      <a href='/artists.html'>Add Songs</a>
     </div><!-- id='addsongs' -->
    </div>
   </div><!-- id='body' -->
-  <script>
- function clearElements(element) {
-    var len = element.childNodes.length;
-    for (var cIdx = 0; cIdx < len; cIdx++) {
-        element.removeChild(element.firstChild);
-    }
- }
-
-    function gotPlay(obj,txt) {
-        console.log(obj);
-        console.log(txt);
-    }
-
-    function gotSongs(obj,txt) {
-        console.log(obj);
-        var div = document.getElementById('songlist');
-        clearElements(div);
-        var table = document.createElement('table');
-        div.appendChild(table);
-        for (artist in obj) {
-            for (sidx in obj[artist]) {
-                var song = obj[artist][sidx];
-                var row = table.insertRow(-1);
-                var aCell = row.insertCell(-1);
-                var sCell = row.insertCell(-1);
-                aCell.appendChild(document.createTextNode(artist));
-                sCell.appendChild(document.createTextNode(song.title));
-            }
-        }
-    }
-
-  </script>
  </body>
 </html>

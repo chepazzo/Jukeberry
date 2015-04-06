@@ -1,0 +1,36 @@
+<!doctype html>
+<html ng-app='jukeApp'>
+ <head>
+  <title>Jukeberry</title>
+  <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='raspi.css')}}" />
+  <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='jukeberry.css')}}" />
+  <style>
+/*
+#raspi { display: none; }
+*/
+#body.raspi {
+    margin:auto;
+    width: 320px;
+    height: 240px;
+    border: solid black thin;
+    overflow: auto;
+}
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
+  <script src="/JukeCtrl.js">
+  <script>
+  </script>
+ </head>
+ <body>
+  <div id='body' ng-controller="JukeCtrl">
+   <div id='raspi'>
+     <div class='view'>Artist</div><!-- id='view' -->
+     <div class='frame'>
+        <div class='tile clickable'>⇱</div>
+        <div class='tile clickable' ng-repeat='tile in "#ABCDEFGHIJKLMNOPQRSTUVWXYZ"'><span ng-click=''>{[tile]}</span></div>
+     </div><!-- class='frame' -->
+   </div><!-- id='raspi' -->
+  </div><!-- id='body' -->
+ </body>
+</html>
+
