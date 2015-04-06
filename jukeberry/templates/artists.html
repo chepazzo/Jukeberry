@@ -1,5 +1,5 @@
 <!doctype html>
-<html ng-app>
+<html ng-app='jukeApp'>
  <head>
   <title>Jukeberry</title>
   <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='jukeberry.css')}}" />
@@ -13,7 +13,7 @@
 }
   </style>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
-  <script src="JukeCtrl.js">
+  <script src="/JukeCtrl.js">
   <script>
   </script>
  </head>
@@ -27,9 +27,7 @@
     <div id='songlist' class='section'>
      <div class='label'>Select an artist:</div>
       <ol>
-      {% for artist in artists %}
-        <li><a href='/songs.html?artist={{artist}}'>{{artist}}</a></li>
-      {% endfor %}
+        <li ng-repeat='artist in artists'><a href='/{[artist]}/songs.html'>{[artist]}</a></li>
       </ol>
     </div><!-- id='songlist' -->
    </div>

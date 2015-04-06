@@ -19,7 +19,7 @@ jukeApp.controller('JukeCtrl', function ($scope,$rootScope,$http) {
             {method: method, url: url,data: JSON.stringify(data)}
         ).success(function(data, status) {
             console.log(data.data);
-            console.log(text);
+            console.log(status);
         }).error(function(data, status) {
             console.log('ERROR');
             console.log(data);

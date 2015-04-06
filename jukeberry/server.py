@@ -75,12 +75,6 @@ def get_currsong():
     #retval = {a:[s._serialize(skip=['filename']) for s in songs[a]] for a in songs.keys()}
     return jsonify(succ(value=retval))
 
-@app.route('/get/playlist')
-def get_currsong():
-    retval = [s._serialize() for s in JUKE.playlist]
-    #retval = {a:[s._serialize(skip=['filename']) for s in songs[a]] for a in songs.keys()}
-    return jsonify(succ(value=retval))
-
 @app.route('/add', methods = ['POST'])
 def add():
     # 'path' should be used only for testing.
