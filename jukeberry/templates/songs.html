@@ -25,7 +25,7 @@
     <div id='songlist' class='section'>
      <div class='label'>Songs by {{artist}}:</div>
       <ol>
-        <li ng-repeat='song in songs["{{artist}}"]'><span class='name clickable' ng-click='play(song.artist,song.title)'>{[song.title]}</span></li>
+        <li ng-repeat='song in songs["{{artist.replace('"','\\"')}}"]'><span class='name clickable' ng-click='play(song.artist,song.title)'>{[song.title]}</span></li>
       </ol>
     </div><!-- id='songlist' -->
    </div>
