@@ -13,11 +13,12 @@
     border: solid black thin;
     overflow: auto;
 }
+.song .name { color:red; }
+.song .artist { color:green; }
+#currsong li { list-style: none; }
   </style>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
-  <script src="/JukeCtrl.js">
-  <script>
-  </script>
+  <script src="/JukeCtrl.js"></script>
  </head>
  <body>
   <div id='head'>
@@ -25,19 +26,22 @@
   </div><!-- id='head' -->
   <div id='body' class='raspi'>
    <div ng-controller="JukeCtrl">
+    <div id='addsongs' class='section'>
+     <a href='/artists.html'>Add Songs</a>
+    </div><!-- id='addsongs' -->
     <div id='currsong' class='section'>
      <span class='label'>Currently Playing:</span> 
-        <span class='name'>{[currsong.title]}</span> by <span class='artist'>{[currsong.artist]}</span>
+        <ul><li>
+          <span class='song'><span class='name'>{[currsong.title]}</span><br />
+          <span class='artist'>{[currsong.artist]}</span></span>
+        </li></ul>
     </div><!-- id='currsong' -->
     <div id='playlist' class='section'>
      <span class='label'>Next Up:</span>
       <ol>
-          <li ng-repeat='song in playlist'><span class='name'>{[song.title]}</span> by <span class='artist'>{[song.artist]}</span></li>
+          <li ng-repeat='song in playlist'><span class='song'><span class='name'>{[song.title]}</span><br /><span class='artist'>{[song.artist]}</span></span></li>
       </ol>
     </div><!-- id='playlist' -->
-    <div id='addsongs' class='section'>
-     <a href='/artists.html'>Add Songs</a>
-    </div><!-- id='addsongs' -->
    </div>
   </div><!-- id='body' -->
  </body>

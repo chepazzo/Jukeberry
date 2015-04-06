@@ -71,7 +71,9 @@ def get_songlist():
 
 @app.route('/get/currsong')
 def get_currsong():
-    retval = JUKE.currsong._serialize()
+    retval = JUKE.currsong;
+    if retval is not None:
+        retval = retval._serialize()
     #retval = {a:[s._serialize(skip=['filename']) for s in songs[a]] for a in songs.keys()}
     return jsonify(succ(value=retval))
 
