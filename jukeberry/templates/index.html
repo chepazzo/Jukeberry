@@ -31,15 +31,18 @@
     </div><!-- id='addsongs' -->
     <div id='currsong' class='section'>
      <span class='label'>Currently Playing:</span> 
-        <ul><li>
-          <span class='song'><span class='name'>{[currsong.title]}</span><br />
+        <ul ng-show='currsong'><li>
+          <span class='song'><span class='name'>{[currsong.title]}</span> <span class='time'>[{[currsong.secs|secs2hms:'h:m:s']}]</span><br />
           <span class='artist'>{[currsong.artist]}</span></span>
         </li></ul>
     </div><!-- id='currsong' -->
     <div id='playlist' class='section'>
-     <span class='label'>Next Up:</span>
+     <span class='label'>Next Up:</span> <span class='time' ng-show='playlist.length'>[{[get_playlist_length()|secs2hms:'h:m:s']}]</span>
       <ol>
-          <li ng-repeat='song in playlist'><span class='song'><span class='name'>{[song.title]}</span><br /><span class='artist'>{[song.artist]}</span></span></li>
+          <li ng-repeat='song in playlist'><span class='song'>
+            <span class='name'>{[song.title]}</span> <span class='time'>[{[song.secs|secs2hms:'h:m:s']}]</span><br />
+            <span class='artist'>{[song.artist]}</span>
+          </span></li>
       </ol>
     </div><!-- id='playlist' -->
    </div>

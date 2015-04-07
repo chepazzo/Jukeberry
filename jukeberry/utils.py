@@ -1,7 +1,6 @@
-print "utils.py: %s"%__name__
-
 import subprocess
 import threading
+import time
 
 from pprint import pprint as pp
 
@@ -29,3 +28,12 @@ def _popenAndCall(onExit, popenArgs):
     pp(dir(thread))
     # returns immediately after the thread starts
     return thread
+
+def secs2ms(secs):
+    (h,m,s) = _secs2hms(secs)
+    ms = "{: 2}:{:02}".format(m,s)
+    return ms
+
+def _secs2hms(secs):
+    t = time.gmtime(secs)
+    return (t.tm_hour,t.tm_min,t.tm_sec)

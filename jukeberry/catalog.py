@@ -3,6 +3,7 @@ import time
 import json
 import eyed3
 import eyed3.mp3
+import utils
 
 class Song(object):
 
@@ -11,7 +12,8 @@ class Song(object):
         title = None,
         album = None,
         genre = None,
-        year = None):
+        year = None,
+        secs = 0):
         if artist is None:
             artist = []
         self.filename = filename
@@ -20,7 +22,11 @@ class Song(object):
         self.album = album
         self.genre = genre
         self.year = year
+        self.secs = secs
+        self.hms = ''
         self.id = None
+        if type(self.secs) == int:
+            self.hms = utils.secs2ms(self.secs)
 
     def _serialize(self,fields=None,skip=None):
         retval = {}
@@ -104,6 +110,7 @@ class SongCatalog(list):
             "album": id3.tag.album,
             "genre": genre,
             "year": id3.tag.artist,
+            "secs": id3.info.time_secs,
         }
         if not tags["artist"] or not tags["title"]:
             print "Artist or title not set in " + \
@@ -115,6 +122,7 @@ class SongCatalog(list):
             genre=tags["genre"],
             title=tags["title"],
             year=tags["year"],
+            secs=tags["secs"],
         )
         #print "WTF: added %s"%song.title
         self.append(song)

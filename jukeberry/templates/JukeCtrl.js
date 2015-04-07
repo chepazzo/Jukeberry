@@ -122,9 +122,38 @@ jukeApp.controller('JukeCtrl', function ($scope,$http,$interval) {
             console.log(status);
         });
     };
+    $scope.get_playlist_length = function() {
+        secs = 0;
+        for (i=0; i<$scope.playlist.length; i++) {
+            secs += $scope.playlist[i].secs;
+        }
+        return secs;
+        return "h:m:s";
+    };
     $scope.get_playlist();
     $scope.get_currsong();
     $scope.get_artists();
     $scope.get_songs();
+});
+
+jukeApp.filter('secs2hms', function() {
+  return function(secs,type) {
+    var d = parseInt( secs / (60*60*24) );
+    var h = parseInt( secs / (60*60) ) % 24;
+    var m = parseInt( secs / 60 ) % 60;
+    var s = secs % 60;
+    var tstr = '';
+    if (type == 'h:m:s') {
+        var buff = (h > 0) ? '0' : ' ';
+        tstr += (buff+m).slice(-2) + ":" + ('0'+s).slice(-2);
+        if (h>0) { tstr = h + ":" + tstr; }
+    } else {
+        if(d > 0) tstr += d + "d ";
+        if(h > 0) tstr += h + "h ";
+        if(m > 0) tstr += m + "m ";
+        tstr += s + "s";
+    }
+    return tstr;
+  }
 });
 
