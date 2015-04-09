@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 
 import sys
-## Without this, Flask complains that the .egg file
-## is not a directory.
-#sys.argv.append('--old-and-unmanageable')
 
 from setuptools import setup, find_packages
 
@@ -32,6 +29,7 @@ setup(name=__packagename__,
     author=__author__,
     author_email=__email__,
     url=__url__,
+    zip_safe=False,
     packages=find_packages(),
     install_requires=requires,
     include_package_data=True,
@@ -40,8 +38,8 @@ setup(name=__packagename__,
     ],
     data_files=[
         ('/etc', ['config/jukeberry.conf']),
-        ('/etc/init.d/', ['install/deb/jukeberry']),
-        ('/etc/init/', ['install/deb/jukeberry.conf']),
+        #('/etc/init.d/', ['install/deb/jukeberry']),
+        #('/etc/init/', ['install/deb/jukeberry.conf']),
     ],
     entry_points={
         'console_scripts': {
