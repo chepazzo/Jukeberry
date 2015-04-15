@@ -52,14 +52,14 @@ jukeApp.controller('JukeCtrl', function ($scope,$http,$interval) {
         });
     };
     $scope.get_songs = function() {
-        var url = '{{url_for('get_songlist')}}';
+        var url = '{{url_for('get_songs')}}';
         var method = 'GET';
         $http(
             {method: method, url: url}
         ).success(function(data, status) {
             $scope.songs = data.data;
             console.log(data.data);
-            $scope.artists = Object.keys(data.data);
+            $scope.artists = get_artists(data.data);
             $scope.genres = get_genres(data.data);
         }).error(function(data, status) {
             console.log('ERROR');
@@ -133,6 +133,12 @@ jukeApp.controller('JukeCtrl', function ($scope,$http,$interval) {
         return secs;
         return "h:m:s";
     };
+    $scope.get_songs_by_artist = function(artist) {
+        return find_songs($scope.songs,'artist',artist);
+    };
+    $scope.find_songs = function(field,value) {
+        return find_songs($scope.songs,field,value);
+    };
     $scope.get_playlist();
     $scope.get_currsong();
     //$scope.get_artists();
@@ -162,11 +168,32 @@ jukeApp.filter('secs2hms', function() {
 
 function get_genres(songs) {
     genreobj = {};
-    artists = Object.keys(songs);
-    for (var i = 0; i < artists.length; i++) {
-        song = songs[artists[i]];
-        genreobj[song.genre] = 1;
+    for (var i = 0; i < songs.length; i++) {
+        genreobj[songs[i].genre] = 1;
     }
     genres = Object.keys(genreobj);
     return genres;
+}
+function get_artists(songs) {
+    retobj = {};
+    for (var i = 0; i < songs.length; i++) {
+        artists = songs[i].artist;
+        for (var j = 0; j< artists.length; j++) { 
+            retobj[artists[j]] = 1;
+        }
+    }
+    values = Object.keys(retobj);
+    return values;
+}
+function find_songs(songs,field,value) {
+    // Requires exact matches
+    // This is ok because humans won't be typing.
+    var retsongs = []
+    for (var i = 0; i < songs.length; i++) {
+        val = songs[i][field];
+        if (val.indexOf(value) != -1) {
+            retsongs.push(songs[i]);
+        }
+    }
+    return retsongs;
 }

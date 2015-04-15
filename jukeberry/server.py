@@ -39,13 +39,21 @@ def artists():
 def genres():
     return render_template('genres.html')#,
 
-@app.route('/<string:artist>/songs.html')
-def songs(artist):
+@app.route('/artist/<string:artist>/songs.html')
+def songs_by_artist(artist):
     #artist = request.args.get('artist')
     return render_template('songs.html',
     #    json=json,
     #    songs=JUKE.songlist.get_songs_by_artist(artist),
-        artist=artist
+        field='artist',
+        value=artist
+    )
+
+@app.route('/genre/<string:genre>/songs.html')
+def songs_by_genre(genre):
+    return render_template('songs.html',
+        field='genre',
+        value=genre
     )
 
 ## API
@@ -66,10 +74,18 @@ def get_playlist():
     retval = [s._serialize() for s in JUKE.playlist]
     return jsonify(succ(value=retval))
 
+## get_songlist is depricated
 @app.route('/get/songlist')
 def get_songlist():
     songs = JUKE.songlist.list_all_songs_by_artist()
     retval = {a:[s._serialize() for s in songs[a]] for a in songs.keys()}
+    #retval = {a:[s._serialize(skip=['filename']) for s in songs[a]] for a in songs.keys()}
+    return jsonify(succ(value=retval))
+
+@app.route('/get/songs')
+def get_songs():
+    songs = JUKE.songlist
+    retval = [s._serialize() for s in songs]
     #retval = {a:[s._serialize(skip=['filename']) for s in songs[a]] for a in songs.keys()}
     return jsonify(succ(value=retval))
 

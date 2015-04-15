@@ -17,6 +17,7 @@
 .song .genre { color:green; }
 .song table.details { margin-left:5px; }
 .song table.details td.label { text-align:right; }
+ol.songs li { cursor:pointer; }
   </style>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
   <script src="/JukeCtrl.js"></script>
@@ -26,14 +27,14 @@
    <div id='title'>Jukeberry</div>
   </div><!-- id='head' -->
   <div id='body' class='raspi'>
-   <div><a href='/artists.html'>⇱ back</a></div>
+   <div><a href='/{{field}}s.html'>⇱ back</a></div>
    <div ng-controller="JukeCtrl">
     <div id='songlist' class='section'>
-     <div class='label'>Songs by {{artist}}:</div>
-      <ol>
-        <li ng-repeat='song in songs["{{artist.replace('"','\\"')}}"] | orderBy:"title"'>
-            <span class='song'>
-              <span class='name clickable' ng-click='play(song.artist,song.title)'>{[song.title]}</span>
+     <div class='label'>Songs by {{value}}:</div>
+      <ol class='songs'>
+        <li ng-repeat='song in find_songs("{{field}}","{{value.replace('"','\\"')}}") | orderBy:"title"'>
+            <span class='song' ng-click='play(song.artist,song.title)'>
+              <span class='name'>{[song.title]}</span>
               <table class='details'>
                 <tr><td class='label'>Artist(s):</td><td><span class='artist'>{[song.artist.join(",")]}</span></td></tr>
                 <tr><td class='label'>Album:</td><td><span class='album'>{[song.album]}</span></td></tr>
