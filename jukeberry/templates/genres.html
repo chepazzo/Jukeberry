@@ -1,0 +1,36 @@
+<!doctype html>
+<html ng-app='jukeApp'>
+ <head>
+  <title>Jukeberry</title>
+  <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='jukeberry.css')}}" />
+  <style>
+#body.raspi {
+    margin:auto;
+    width: 320px;
+    height: 240px;
+    border: solid black thin;
+    overflow: auto;
+}
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
+  <script src="/JukeCtrl.js">
+  <script>
+  </script>
+ </head>
+ <body>
+  <div id='head'>
+   <div id='title'>Jukeberry</div>
+  </div><!-- id='head' -->
+  <div id='body' class='raspi'>
+   <div><a href='/'>⇱ back</a></div>
+   <div ng-controller="JukeCtrl">
+    <div id='songlist' class='section'>
+     <div class='label'>Select a genre:</div>
+      <ol>
+        <li ng-repeat='genre in genres.sort()'><a href='/{[genre]}/songs.html'>{[genre]}</a></li>
+      </ol>
+    </div><!-- id='songlist' -->
+   </div>
+  </div><!-- id='body' -->
+ </body>
+</html>
