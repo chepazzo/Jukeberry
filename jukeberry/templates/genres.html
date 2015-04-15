@@ -27,7 +27,10 @@
     <div id='songlist' class='section'>
      <div class='label'>Select a genre:</div>
       <ol>
-        <li ng-repeat='genre in genres.sort()'><a href='/genre/{[genre]}/songs.html'>{[genre]}</a></li>
+        <li ng-repeat='genre in genres.sort()'>
+          <a href='/genre/{[genre]}/songs.html'>{[genre]}</a><br />
+          <span class='count'>{[find_songs('genre',genre).length]} songs</span>
+        </li>
       </ol>
     </div><!-- id='songlist' -->
    </div>

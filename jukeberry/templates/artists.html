@@ -27,7 +27,10 @@
     <div id='songlist' class='section'>
      <div class='label'>Select an artist:</div>
       <ol>
-        <li ng-repeat='artist in artists.sort()'><a href='/artist/{[artist]}/songs.html'>{[artist]}</a></li>
+        <li ng-repeat='artist in artists.sort()'>
+          <a href='/artist/{[artist]}/songs.html'>{[artist]}</a><br />
+          <span class='count'>{[find_songs('artist',artist).length]} songs</span>
+        </li>
       </ol>
     </div><!-- id='songlist' -->
    </div>

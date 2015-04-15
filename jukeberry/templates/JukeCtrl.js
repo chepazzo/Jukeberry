@@ -5,7 +5,7 @@ jukeApp.config(['$interpolateProvider', function ($interpolateProvider) {
     $interpolateProvider.endSymbol(']}');
   }]);
 
-jukeApp.controller('JukeCtrl', function ($scope,$http,$interval) {
+jukeApp.controller('JukeCtrl', function ($scope,$http,$interval,$location) {
     $scope.tiles="#ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     $scope.songs = [];
     $scope.artists = [];
@@ -36,6 +36,13 @@ jukeApp.controller('JukeCtrl', function ($scope,$http,$interval) {
         }
     };
     $scope.$on('$destroy', function() { $scope.set_refresh('off'); });
+    $scope.go = function(url) {
+        console.log('[go] redirecting ...');
+        // why doesn't $location work?
+        //$location.path(url);
+        //$location.replace();
+        window.open(url);
+    };
     $scope.play = function(artist,title) {
         var data = {'artist':artist,'title':title};
         var url = '{{url_for('add')}}';
@@ -45,6 +52,8 @@ jukeApp.controller('JukeCtrl', function ($scope,$http,$interval) {
         ).success(function(data, status) {
             console.log(data.data);
             console.log(status);
+            //console.log('[play] redirecting ...');
+            //$location.url('/');
         }).error(function(data, status) {
             console.log('ERROR');
             console.log(data);

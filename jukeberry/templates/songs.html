@@ -33,7 +33,7 @@ ol.songs li { cursor:pointer; }
      <div class='label'>Songs by {{value}}:</div>
       <ol class='songs'>
         <li ng-repeat='song in find_songs("{{field}}","{{value.replace('"','\\"')}}") | orderBy:"title"'>
-            <span class='song' ng-click='play(song.artist,song.title)'>
+            <span class='song' ng-click='play(song.artist,song.title);go("/");'>
               <span class='name'>{[song.title]}</span>
               <table class='details'>
                 <tr><td class='label'>Artist(s):</td><td><span class='artist'>{[song.artist.join(",")]}</span></td></tr>
