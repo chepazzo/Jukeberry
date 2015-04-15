@@ -5,7 +5,7 @@ any computer with python installed.
 
 '''
 
-__version__ = '1.1'
+__version__ = '1.2'
 __author__ = 'Mike Biacaniello'
 __maintainer__ = 'Mike Biacaniello'
 __email__ = 'chepazzo@gmail.com'
