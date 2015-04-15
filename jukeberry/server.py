@@ -35,6 +35,10 @@ def artists():
     #    artists=sorted(JUKE.songlist.list_artists())
     #)
 
+@app.route('/genres.html')
+def genres():
+    return render_template('genres.html')#,
+
 @app.route('/<string:artist>/songs.html')
 def songs(artist):
     #artist = request.args.get('artist')

@@ -7,10 +7,11 @@ jukeApp.config(['$interpolateProvider', function ($interpolateProvider) {
 
 jukeApp.controller('JukeCtrl', function ($scope,$http,$interval) {
     $scope.tiles="#ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    $scope.playlist = [];
-    $scope.artists = [];
-    $scope.currsong = [];
     $scope.songs = [];
+    $scope.artists = [];
+    $scope.genres = [];
+    $scope.playlist = [];
+    $scope.currsong = [];
     var refresh_interval = {
         "run":10000, // check every 10s if running
         "empty":3600000 // check every 1h if not running
@@ -58,6 +59,8 @@ jukeApp.controller('JukeCtrl', function ($scope,$http,$interval) {
         ).success(function(data, status) {
             $scope.songs = data.data;
             console.log(data.data);
+            $scope.artists = Object.keys(data.data);
+            $scope.genres = get_genres(data.data);
         }).error(function(data, status) {
             console.log('ERROR');
             console.log(data);
@@ -132,7 +135,7 @@ jukeApp.controller('JukeCtrl', function ($scope,$http,$interval) {
     };
     $scope.get_playlist();
     $scope.get_currsong();
-    $scope.get_artists();
+    //$scope.get_artists();
     $scope.get_songs();
 });
 
@@ -157,3 +160,13 @@ jukeApp.filter('secs2hms', function() {
   }
 });
 
+function get_genres(songs) {
+    genreobj = {};
+    artists = Object.keys(songs);
+    for (var i = 0; i < artists.length; i++) {
+        song = songs[artists[i]];
+        genreobj[song.genre] = 1;
+    }
+    genres = Object.keys(genreobj);
+    return genres;
+}

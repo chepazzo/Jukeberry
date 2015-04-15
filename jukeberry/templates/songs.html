@@ -11,6 +11,12 @@
     border: solid black thin;
     overflow: auto;
 }
+.song .name { color:red; }
+.song .artist { color:green; }
+.song .album { color:green; }
+.song .genre { color:green; }
+.song table.details { margin-left:5px; }
+.song table.details td.label { text-align:right; }
   </style>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
   <script src="/JukeCtrl.js"></script>
@@ -25,7 +31,16 @@
     <div id='songlist' class='section'>
      <div class='label'>Songs by {{artist}}:</div>
       <ol>
-        <li ng-repeat='song in songs["{{artist.replace('"','\\"')}}"] | orderBy:"title"'><span class='name clickable' ng-click='play(song.artist,song.title)'>{[song.title]}</span></li>
+        <li ng-repeat='song in songs["{{artist.replace('"','\\"')}}"] | orderBy:"title"'>
+            <span class='song'>
+              <span class='name clickable' ng-click='play(song.artist,song.title)'>{[song.title]}</span>
+              <table class='details'>
+                <tr><td class='label'>Artist(s):</td><td><span class='artist'>{[song.artist.join(",")]}</span></td></tr>
+                <tr><td class='label'>Album:</td><td><span class='album'>{[song.album]}</span></td></tr>
+                <!-- <tr><td class='label'>Genre:</td><td><span class='genre'>{[song.genre]}</span></td></tr> -->
+              </table><!-- class='details' -->
+            </span>
+        </li>
       </ol>
     </div><!-- id='songlist' -->
    </div>
