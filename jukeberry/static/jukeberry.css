@@ -23,6 +23,19 @@
     margin-top: 5px;
  }
 
+/* Navbar CSS */
+#navbar {
+    height:20px;
+}
+#navbar .active { color:red; }
+#navbar div.button { 
+    float:left;
+    margin: 3px;
+    height:14px;
+}
+#navbar div.clickable:hover { text-decoration:underline; color:blue; }
+
+
 /* Song CSS */
 .song .name { color:red; }
 .song .artist { color:green; }
@@ -33,3 +46,5 @@
 
 #currsong li { list-style: none; }
 
+/* Attribute list CSS */
+#attrlist .attr { color:red; }
