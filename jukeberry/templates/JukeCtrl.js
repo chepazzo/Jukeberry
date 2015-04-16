@@ -84,8 +84,8 @@ jukeApp.controller('JukeCtrl', function ($scope,$http,$interval,$location) {
         ).success(function(data, status) {
             $scope.songs = data.data;
             console.log(data.data);
-            $scope.artists = get_artists(data.data);
-            $scope.genres = get_genres(data.data);
+            $scope.artists = find_attrs(data.data,'artist');
+            $scope.genres = find_attrs(data.data,'genre');
         }).error(function(data, status) {
             console.log('ERROR');
             console.log(data);
@@ -156,7 +156,6 @@ jukeApp.controller('JukeCtrl', function ($scope,$http,$interval,$location) {
             secs += $scope.playlist[i].secs;
         }
         return secs;
-        return "h:m:s";
     };
     $scope.get_songs_by_artist = function(artist) {
         return find_songs($scope.songs,'artist',artist);
@@ -170,7 +169,6 @@ jukeApp.controller('JukeCtrl', function ($scope,$http,$interval,$location) {
     };
     $scope.get_playlist();
     $scope.get_currsong();
-    //$scope.get_artists();
     $scope.get_songs();
 });
 
@@ -212,25 +210,7 @@ function find_attrs(songs,attr) {
     return attrs;
     
 }
-function get_genres(songs) {
-    genreobj = {};
-    for (var i = 0; i < songs.length; i++) {
-        genreobj[songs[i].genre] = 1;
-    }
-    genres = Object.keys(genreobj);
-    return genres;
-}
-function get_artists(songs) {
-    retobj = {};
-    for (var i = 0; i < songs.length; i++) {
-        artists = songs[i].artist;
-        for (var j = 0; j< artists.length; j++) { 
-            retobj[artists[j]] = 1;
-        }
-    }
-    values = Object.keys(retobj);
-    return values;
-}
+
 function find_songs(songs,attr,value) {
     // Requires exact matches
     // This is ok because humans won't be typing.

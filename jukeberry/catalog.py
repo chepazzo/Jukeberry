@@ -119,7 +119,7 @@ class SongCatalog(list):
         song = Song(filename,
             artist=tags["artist"].split('/'),
             album=tags["album"],
-            genre=tags["genre"],
+            genre=tags["genre"].split('/'),
             title=tags["title"],
             year=tags["year"],
             secs=tags["secs"],
