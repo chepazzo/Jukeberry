@@ -144,6 +144,7 @@ def fail(msg='',code=0):
 
 def main():
     import sys
+    JUKE.load_catalog()
     if 'debug' in sys.argv:
         print "Flask DEBUG"
         app.run(debug = True)

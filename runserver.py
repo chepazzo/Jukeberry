@@ -4,7 +4,7 @@ import sys
 
 def main():
     #server.JUKE.medialib = '/var/media/music/Misc/'
-    server.JUKE.load_catalog()
+    #server.JUKE.load_catalog()
     if 'debug' in sys.argv:
         print "Flask DEBUG"
         server.app.run(debug = True)
