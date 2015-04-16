@@ -4,11 +4,6 @@
  }
  .clickable {
     cursor:pointer;
-    color:blue;
- }
- .clickable:hover {
-    color:red;
-    text-decoration:underline;
  }
  .label {
     font-weight:bold;
@@ -27,4 +22,14 @@
  div.section {
     margin-top: 5px;
  }
+
+/* Song CSS */
+.song .name { color:red; }
+.song .artist { color:green; }
+.song .album { color:green; }
+.song .genre { color:green; }
+.song table.details { margin-left:5px; }
+.song table.details td.label { text-align:right; }
+
+#currsong li { list-style: none; }
 
