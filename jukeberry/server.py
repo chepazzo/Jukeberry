@@ -25,6 +25,12 @@ def top():
     #    playlist=JUKE.playlist
     )
 
+@app.route('/onepage')
+def onepage():
+    return render_template('onepage.html',
+        list=list,
+    )
+
 @app.route('/JukeCtrl.js')
 def jukectrljs():
     return render_template('JukeCtrl.js')

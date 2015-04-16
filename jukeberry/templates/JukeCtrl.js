@@ -6,12 +6,28 @@ jukeApp.config(['$interpolateProvider', function ($interpolateProvider) {
   }]);
 
 jukeApp.controller('JukeCtrl', function ($scope,$http,$interval,$location) {
+    // data
     $scope.tiles="#ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     $scope.songs = [];
     $scope.artists = [];
     $scope.genres = [];
     $scope.playlist = [];
     $scope.currsong = [];
+    // nav
+    $scope.section = "current";
+    $scope.currattr = "artist";
+    $scope.currvalue = "";
+    $scope.setfv = function(f,v) {
+        $scope.currattr = f;
+        $scope.currvalue = v;
+    };
+    $scope.issection = function(sect) {
+        if ($scope.section == sect) { return true; }
+        return false;
+    };
+    $scope.setsection = function(sect) {
+        $scope.section = sect;
+    };
     var refresh_interval = {
         "run":10000, // check every 10s if running
         "empty":3600000 // check every 1h if not running
@@ -52,8 +68,8 @@ jukeApp.controller('JukeCtrl', function ($scope,$http,$interval,$location) {
         ).success(function(data, status) {
             console.log(data.data);
             console.log(status);
-            //console.log('[play] redirecting ...');
-            //$location.url('/');
+            $scope.get_playlist();
+            $scope.get_currsong();
         }).error(function(data, status) {
             console.log('ERROR');
             console.log(data);
@@ -145,8 +161,12 @@ jukeApp.controller('JukeCtrl', function ($scope,$http,$interval,$location) {
     $scope.get_songs_by_artist = function(artist) {
         return find_songs($scope.songs,'artist',artist);
     };
-    $scope.find_songs = function(field,value) {
-        return find_songs($scope.songs,field,value);
+    $scope.find_songs = function(attr,value) {
+        if (value == '') { return $scope.songs; }
+        return find_songs($scope.songs,attr,value);
+    };
+    $scope.find_attrs = function(attr) {
+        return find_attrs($scope.songs,attr);
     };
     $scope.get_playlist();
     $scope.get_currsong();
@@ -175,6 +195,22 @@ jukeApp.filter('secs2hms', function() {
   }
 });
 
+function find_attrs(songs,attr) {
+    retobj = {};
+    for (var i = 0; i < songs.length; i++) {
+        val = songs[i][attr];
+        if (typeof val == 'string') {
+            retobj[val] = 1;
+        } else {
+            for (var j = 0; j< val.length; j++) { 
+                retobj[val[j]] = 1;
+            }
+        }
+    }
+    attrs = Object.keys(retobj);
+    return attrs;
+    
+}
 function get_genres(songs) {
     genreobj = {};
     for (var i = 0; i < songs.length; i++) {
@@ -194,12 +230,12 @@ function get_artists(songs) {
     values = Object.keys(retobj);
     return values;
 }
-function find_songs(songs,field,value) {
+function find_songs(songs,attr,value) {
     // Requires exact matches
     // This is ok because humans won't be typing.
     var retsongs = []
     for (var i = 0; i < songs.length; i++) {
-        val = songs[i][field];
+        val = songs[i][attr];
         if (val.indexOf(value) != -1) {
             retsongs.push(songs[i]);
         }
