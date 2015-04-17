@@ -16,6 +16,8 @@ class Song(object):
         secs = 0):
         if artist is None:
             artist = []
+        if genre is None:
+            genre = []
         self.filename = filename
         self.artist = artist
         self.title = title
@@ -104,6 +106,8 @@ class SongCatalog(list):
         genre = getattr(id3.tag,'genre',None)
         if genre:
             genre = genre.name
+        else:
+            genre = ''
         tags = {
             "artist": id3.tag.artist,
             "title": id3.tag.title,
