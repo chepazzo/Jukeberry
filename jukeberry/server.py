@@ -19,15 +19,11 @@ JUKE = jukebox.Jukebox()
 def top():
     return render_template('index.html',
         list=list,
-    #    json=json,
-    #    currsong=JUKE.currsong,
-    #    songlist=sorted(JUKE.songlist.list_all_songs_by_artist(),key=lambda x: x.title),
-    #    playlist=JUKE.playlist
     )
 
-@app.route('/onepage')
+@app.route('/current.html')
 def onepage():
-    return render_template('onepage.html',
+    return render_template('current.html',
         list=list,
     )
 
