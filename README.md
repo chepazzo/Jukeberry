@@ -1,7 +1,7 @@
 Jukeberry
 =========
 
-Attempt at a simple Jukebox App for my Raspberry Pi.
+A simple Jukebox App for my Raspberry Pi. This is meant to act as a self-contained jukebox, not a full-featured media player. As such, it is essentially a 'now playing' queue. A user can browse by artist or genre and select a song to be added to the queue. By default, music is read either from disk or USB stick (if you want, you can mount a shared network drive in /var/media/music, but there is currently no GUI configuration mechanism to accomplish this). Also, while you can control the jukebox from your phone's browser, you explicitly cannot stream content from your phone or mobile device. As the perceived use case is for in a party/business environment, you would want more control over the music played to avoid inappropriate content. If, however, you are using this for a more personal use, then why wouldn't you just use a standard full-featured music player?
 
 Overview
 ----
