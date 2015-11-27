@@ -198,6 +198,7 @@ function find_attrs(songs,attr) {
     for (var i = 0; i < songs.length; i++) {
         val = songs[i][attr];
         if (val == null) { continue; }
+        if (val == '') { continue; }
         if (typeof val == 'string') {
             retobj[val] = 1;
         } else {
