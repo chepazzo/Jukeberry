@@ -11,6 +11,7 @@ import utils
 import json
 import os
 import time
+import random
 
 from pprint import pprint as pp
 
@@ -65,6 +66,22 @@ class Jukebox(object):
         if filename is not None:
             self.currsong = song
             currthread = utils._popenAndCall(self.play_next_song,([self.player,filename],))
+
+    def play_random_song(self,genre=None):
+        ## Clear current playing song
+        self.currsong = None
+        num_songs = len(self.songlist)
+        song_num = random.randint(0,num_songs-1)
+        song = self.songlist[song_num]
+        filename = None
+        if type(song) == catalog.Song:
+            filename = song.filename
+        else:
+            filename = song
+        if filename is not None:
+            self.currsong = song
+            currthread = utils._popenAndCall(self.play_next_song,([self.player,filename],))
+        return filename
 
     def add_songs_to_playlist(self,**kwargs):
         songs = self.catalog.get_songs_by_keyword(**kwargs)

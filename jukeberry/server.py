@@ -129,6 +129,11 @@ def start():
     JUKE.start_jukebox()
     return "Jukebox Started!"
 
+@app.route('/random')
+def play_random():
+    song = JUKE.play_random_song()
+    return jsonify(succ(value=song))
+
 def succ(field='data',value=''):
     ''' {'stat':'ok', 'data':{} '''
     return {'stat':'ok',field:value}
