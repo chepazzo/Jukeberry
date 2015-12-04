@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<!--
+    ***THIS PAGE NEEDS A LOT OF WORK!***
+    I need a place to allow me to toggle the autoplay feature.
+    But, I don't want everyone changing it on whim.
+    Eventually, I need to create an admin login.
+ -->
+<html ng-app='jukeApp'>
+ <head>
+  <title>Jukeberry Settings</title>
+  <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='raspi.css')}}" />
+  <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='jukeberry.css')}}" />
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
+  <script src="/JukeCtrl.js"></script>
+ </head>
+ <body>
+  <div id='head'>
+   <div id='title'>Jukeberry Settings</div>
+  </div><!-- id='head' -->
+  <div id='body' class='raspi' ng-controller="JukeCtrl">
+   <div id='alwayson'>
+     <div id='seton' class='clickable button'
+        ng-click='setalwayson(true);'>
+      on</div>
+     <div id='setoff' class='clickable button'
+        ng-click='setalwayson(false);'>
+      off</div>
+   </div>
+
+   <div>
+    {[currattr]}:{[currvalue]}
+   </div>
+
+<select ng-model="currattr">
+    <option value="">Select Attr</option>
+    <option value="artist">Artists</option>
+    <option value="genre">Genres</option>
+</select>
+<select ng-model="currvalue" ng-options="attr for attr in find_attrs(currattr).sort()">
+    <option value="">Select {[currattr]}</option>
+</select>
+
+  </div><!-- id='body' -->
+ </body>
+</html>
+
+

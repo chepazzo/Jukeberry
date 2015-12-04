@@ -21,6 +21,12 @@ def top():
         list=list,
     )
 
+@app.route('/settings.html')
+def settings():
+    return render_template('settings.html',
+        list=list,
+    )
+
 @app.route('/current.html')
 def onepage():
     return render_template('current.html',
@@ -98,6 +104,25 @@ def get_currsong():
         retval = retval._serialize()
     #retval = {a:[s._serialize(skip=['filename']) for s in songs[a]] for a in songs.keys()}
     return jsonify(succ(value=retval))
+
+@app.route('/get/alwayson')
+def get_alwayson():
+    retval = JUKE.alwayson;
+    return jsonify(succ(value=retval))
+
+@app.route('/set/alwayson', methods = ['POST'])
+def set_alwayson():
+    content = request.get_json(silent=True)
+    if content is None:
+        return jsonify(fail(msg="No data sent in request!"))
+    if content in [True,False]:
+        JUKE.alwayson['status'] = content
+    else:
+        if 'status' in content.keys():
+            JUKE.alwayson['status'] = content['status']
+        if 'filter' in content.keys():
+            JUKE.alwayson['filter'] = content['filter']
+    return jsonify(succ(value=JUKE.alwayson))
 
 @app.route('/add', methods = ['POST'])
 def add():

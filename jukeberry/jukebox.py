@@ -34,6 +34,10 @@ class Jukebox(object):
             medialib = LIB
         self.songlist = catalog.SongCatalog()
         self.playlist = []
+        self.alwayson = {
+            "status":False,
+            "filter":{}
+        }
         self.currsong = None
         self.proc = None
         self.player = utils.find_player(player)
@@ -58,6 +62,10 @@ class Jukebox(object):
         ## Clear current playing song
         self.currsong = None
         song = self.get_next_song()
+        if song is None:
+            if self.alwayson['status']:
+                print "No next song ... finding random."
+                song = self.songlist.get_random_song(**self.alwayson['filter'])
         filename = None
         if type(song) == catalog.Song:
             filename = song.filename
@@ -66,22 +74,6 @@ class Jukebox(object):
         if filename is not None:
             self.currsong = song
             currthread = utils._popenAndCall(self.play_next_song,([self.player,filename],))
-
-    def play_random_song(self,genre=None):
-        ## Clear current playing song
-        self.currsong = None
-        num_songs = len(self.songlist)
-        song_num = random.randint(0,num_songs-1)
-        song = self.songlist[song_num]
-        filename = None
-        if type(song) == catalog.Song:
-            filename = song.filename
-        else:
-            filename = song
-        if filename is not None:
-            self.currsong = song
-            currthread = utils._popenAndCall(self.play_next_song,([self.player,filename],))
-        return filename
 
     def add_songs_to_playlist(self,**kwargs):
         songs = self.catalog.get_songs_by_keyword(**kwargs)

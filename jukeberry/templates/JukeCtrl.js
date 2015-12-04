@@ -7,6 +7,7 @@ jukeApp.config(['$interpolateProvider', function ($interpolateProvider) {
 
 jukeApp.controller('JukeCtrl', function ($scope,$http,$interval,$location) {
     // data
+    $scope.alwayson = false;
     $scope.tiles="#ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     $scope.songs = [];
     $scope.artists = [];
@@ -58,6 +59,35 @@ jukeApp.controller('JukeCtrl', function ($scope,$http,$interval,$location) {
         //$location.path(url);
         //$location.replace();
         window.open(url);
+    };
+    $scope.setalwayson = function(action) {
+        // The problem with this is that turning the feature off
+        // resets the filter to the current attr:value.
+        // This means that to put it back, you have to navigate first
+        //  to the right filter.
+        // To fix this, I need to split this into two functions.
+        var attr = $scope.currattr;
+        var value = $scope.currvalue;
+        var filter = {};
+        var data = {
+            "status":action,
+            "filter":filter
+        };
+        if (attr != '' && value != '') {
+            filter[attr] = value;
+        }
+        var url = '{{url_for('set_alwayson')}}';
+        var method = 'POST';
+        $http(
+            {method: method, url: url,data: JSON.stringify(data)}
+        ).success(function(data, status) {
+            console.log(data.data);
+            console.log(status);
+        }).error(function(data, status) {
+            console.log('ERROR');
+            console.log(data);
+            console.log(status);
+        });
     };
     $scope.play = function(artist,title) {
         var data = {'artist':artist,'title':title};
