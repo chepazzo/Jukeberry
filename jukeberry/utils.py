@@ -25,7 +25,7 @@ def _popenAndCall(onExit, popenArgs):
         return
     thread = threading.Thread(target=runInThread, args=(onExit, popenArgs))
     thread.start()
-    pp(dir(thread))
+    #pp(dir(thread))
     # returns immediately after the thread starts
     return thread
 

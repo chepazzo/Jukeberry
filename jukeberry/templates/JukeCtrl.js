@@ -15,7 +15,7 @@ jukeApp.controller('JukeCtrl', function ($scope,$http,$interval,$location) {
     $scope.currsong = [];
     // nav
     $scope.section = "current";
-    $scope.currattr = "artist";
+    $scope.currattr = "";
     $scope.currvalue = "";
     $scope.setfv = function(f,v) {
         $scope.currattr = f;
@@ -62,6 +62,28 @@ jukeApp.controller('JukeCtrl', function ($scope,$http,$interval,$location) {
     $scope.play = function(artist,title) {
         var data = {'artist':artist,'title':title};
         var url = '{{url_for('add')}}';
+        var method = 'POST';
+        $http(
+            {method: method, url: url,data: JSON.stringify(data)}
+        ).success(function(data, status) {
+            console.log(data.data);
+            console.log(status);
+            $scope.get_playlist();
+            $scope.get_currsong();
+        }).error(function(data, status) {
+            console.log('ERROR');
+            console.log(data);
+            console.log(status);
+        });
+    };
+    $scope.play_random = function() {
+        var attr = $scope.currattr;
+        var value = $scope.currvalue;
+        var data = {};
+        if (attr != '' && value != '') {
+            data[attr] = value;
+        }
+        var url = '{{url_for('add_random')}}';
         var method = 'POST';
         $http(
             {method: method, url: url,data: JSON.stringify(data)}

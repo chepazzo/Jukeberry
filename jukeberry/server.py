@@ -104,17 +104,16 @@ def add():
     # 'path' should be used only for testing.
     # For production, we probably don't want to allow
     # someone to send a filesys path!
-    #if not request.json or not 'path' in request.json:
-    #    abort(400)
-    #songpath = request.json.get('path',None)
-    pp(request.json)
-    songs = JUKE.songlist.get_songs_by_keyword(**request.json)
-    pp([s._serialize() for s in songs])
+    content = request.get_json(silent=True)
+    if content is None:
+        return jsonify(fail(msg="No data sent in request!"))
+    #pp(content)
+    songs = JUKE.songlist.get_songs_by_keyword(**content)
+    #pp([s._serialize() for s in songs])
     for song in songs:
         songpath = song.filename
         if os.path.isfile(songpath):
             JUKE.playlist.append(song)
-            #JUKE.playlist.append(songpath)
         else:
             return jsonify(fail("%s file does not exist."%songpath))
         print "Added %s"%songpath
@@ -123,16 +122,28 @@ def add():
     song_titles = [s.title for s in songs]
     return jsonify(succ(value=song_titles))
 
+@app.route('/add_random', methods = ['POST'])
+def add_random():
+    content = request.get_json(silent=True)
+    print "Random: {}".format(content)
+    song = JUKE.songlist.get_random_song(**content)
+    if song is None:
+        return jsonify(fail("No matching songs found."))
+    songpath = song.filename
+    if os.path.isfile(songpath):
+        JUKE.playlist.append(song)
+    else:
+        return jsonify(fail("%s file does not exist."%songpath))
+    print "Randomly added %s"%songpath
+    print "Starting Jukebox"
+    JUKE.start_jukebox()
+    return jsonify(succ(value=song.title))
+
 ## Start/Stop
 @app.route('/start')
 def start():
     JUKE.start_jukebox()
     return "Jukebox Started!"
-
-@app.route('/random')
-def play_random():
-    song = JUKE.play_random_song()
-    return jsonify(succ(value=song))
 
 def succ(field='data',value=''):
     ''' {'stat':'ok', 'data':{} '''

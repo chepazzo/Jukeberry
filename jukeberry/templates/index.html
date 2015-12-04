@@ -30,7 +30,7 @@
 
    <div id="navbar">
      <div id='currbutt' class='clickable button' 
-        ng-click='setsection("current");' 
+        ng-click='currvalue="";currattr="";setsection("current");' 
         ng-class="{'active':issection('current')}">
       Top</div>
      <div id='artistsbutt' class='clickable button' 
@@ -45,7 +45,12 @@
         ng-click='currvalue="";setsection("browse");' 
         ng-class="{'active':issection('browse')}">
       Browse</div>
+     <div id='randomsbutt' class='clickable button' 
+        ng-click='play_random();setsection("current");'
+        ng-class="">
+      Random</div>
      <div id='songsbutt' class='button active' 
+        ng-click='play_random();'
         ng-show='issection("songlist");'>
       Songs</div>
    </div><!-- id="navbar" -->
@@ -109,7 +114,6 @@
      </div><!-- id='attributes' -->
 
    </div><!-- id='views' -->
-
   </div><!-- id='body' -->
  </body>
 </html>

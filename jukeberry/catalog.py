@@ -4,6 +4,7 @@ import json
 import eyed3
 import eyed3.mp3
 import utils
+import random
 
 class Song(object):
 
@@ -29,6 +30,18 @@ class Song(object):
         self.id = None
         if type(self.secs) == int:
             self.hms = utils.secs2ms(self.secs)
+
+    def ismatch(self,f,v):
+        val = getattr(self,f,None)
+        ## This way, I can match on genre and artist
+        ## Of course, if they are both lists, then 
+        ## I'll assume that you are looking for an exact match.
+        ## e.g.
+        ## If you want to match on the Sinatra version of My Way
+        ## but exclude any duets of the same song.
+        if '__iter__' in dir(val) and not '__iter__' in dir(v):
+            return v in val
+        return v == val
 
     def _serialize(self,fields=None,skip=None):
         retval = {}
@@ -138,10 +151,12 @@ class SongCatalog(list):
         return d
 
     def get_songs_by_keyword(self,**kwargs):
+        if len(kwargs.keys()) == 0:
+            return []
         apl = [s for s in self]
         for f in kwargs.keys():
             v = kwargs[f]
-            apl = [s for s in apl if getattr(s,f,None) == v]
+            apl = [s for s in apl if s.ismatch(f,v)]
         return apl
 
     def list_artists(self):
@@ -154,6 +169,18 @@ class SongCatalog(list):
         ''' Returns list of songs by exact match '''
         songs = [s for s in self if artist.lower() in [a.lower() for a in s.artist]]
         return songs 
+
+    def get_random_song(self,**kwargs):
+        songs = self
+        print "get_random_song({})".format(kwargs)
+        if len(kwargs.keys()) > 0:
+            songs = self.get_songs_by_keyword(**kwargs)
+        num_songs = len(songs)
+        if num_songs < 1:
+            return None
+        song_num = random.randint(0,num_songs-1)
+        song = songs[song_num]
+        return song
 
     def find_songs_by_artist(self,artist):
         ''' Returns list of songs by substring match '''
