@@ -1,0 +1,1 @@
+sphinx-apidoc -H 'Jukeberry' -V '2.1' -R '2.1' -A 'Mike Biancaniello' -fF -o . ..

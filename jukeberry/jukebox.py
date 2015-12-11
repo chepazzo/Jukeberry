@@ -1,4 +1,5 @@
 #/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 ## Add files to playlist via POST to /add:
 ## curl -i -H "Content-Type: application/json" -X POST -d '{"path":"/edia/music/Misc/The Champs - Tequila.mp3"}' http://localhost:5000/add
