@@ -18,7 +18,7 @@ def find_player(name=None):
     Returns:
       str: The fully qualified path to the music player on the system.
     '''
-    ## Find mpg123 executable
+    ## Find player executable
     if name is None:
         return None
     p=subprocess.Popen(["which", name],stdin=subprocess.PIPE,stdout=subprocess.PIPE)
