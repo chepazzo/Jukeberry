@@ -1,1 +1,1 @@
-sphinx-apidoc -f -M -o . src
+sphinx-apidoc -e -f -M -o . ..
