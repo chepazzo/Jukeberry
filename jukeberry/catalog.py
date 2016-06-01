@@ -39,7 +39,7 @@ class Song(object):
       id (str): Not used.
     '''
 
-    def __init__(self,filename,
+    def __init__(self, filename,
         artist = None,
         title = None,
         album = None,
@@ -62,7 +62,7 @@ class Song(object):
         if type(self.secs) == int:
             self.hms = utils.secs2ms(self.secs)
 
-    def ismatch(self,f,v):
+    def ismatch(self, f, v):
         '''
         Checks to see if song instance is a match to the given
         field=value pair.
@@ -91,7 +91,7 @@ class Song(object):
         Returns:
           bool: True if match; False if not.
         '''
-        val = getattr(self,f,None)
+        val = getattr(self, f, None)
         ## This way, I can match on genre and artist
         ## Of course, if they are both lists, then 
         ## I'll assume that you are looking for an exact match.
@@ -102,7 +102,7 @@ class Song(object):
             return v in val
         return v == val
 
-    def _serialize(self,fields=None,skip=None):
+    def _serialize(self, fields=None, skip=None):
         retval = {}
         if fields is None:
             fields = self.__dict__.keys()
@@ -118,10 +118,28 @@ class Song(object):
         pass
 
 class SongCatalog(list):
-    def __init__(self,*args, **kwargs):
+    """A list of Song() objects.
+
+    ``get_`` methods of this class that take args return exact matches.
+
+    ``find_`` methods of this class that take args return substring matches.
+    """
+    def __init__(self, *args, **kwargs):
         super(SongCatalog, self).__init__(*args, **kwargs)
 
-    def index(self,path,verbosity=0):
+    def index(self, path, verbosity=0):
+        """Index .mp3 files in a directory.
+
+        This will recursively scan a given directory for
+        .mp3 music files and store them as Song() objects.
+
+        Args:
+          path (str): Directory path to music library.
+          verbosity (Optional[int]): The verbosity level to output results.
+
+        .. todo:
+           Replace verbosity ``print`` with logger.
+        """
         if not path.endswith("/"):
             path += "/"
         listing = os.listdir(path)
@@ -134,16 +152,37 @@ class SongCatalog(list):
                     print "Indexing file " + filename
                 self.add_song(filename)
 
-    def append(self,song,*args,**kwargs):
+    def append(self, song, *args, **kwargs):
+        """Add Song() object to list if it does not already exist.
+
+        Args:
+          song (Song): A Song() object.
+          args: Positional args to send to parent class.
+          kwargs: Keyward args to send to parent class.
+
+        .. todo:
+           Replace verbosity ``print`` with logger.
+        """
         if type(song) != Song:
             print "WTF: Not a Song()"
             return None
         if self.find_song(song.filename):
             print "WTF: %s already cataloged"%song.filename
             return None
-        return super(SongCatalog, self).append(song,*args,**kwargs)
+        return super(SongCatalog, self).append(song, *args, **kwargs)
 
-    def find_song(self,song):
+    def find_song(self, song):
+        """Find Song() in list based on filename.
+
+        Args:
+          song (str): Full path of filename of song to find.
+
+        Returns:
+          Song: Song() object. Returns None if not found.
+
+        .. todo:
+           Replace verbosity ``print`` with logger.
+        """
         filename = song
         if type(song) == Song:
             filename = Song.filename
@@ -154,6 +193,21 @@ class SongCatalog(list):
         return retval
 
     def add_song(self, filename):
+        """Adds song to list from filename.
+
+        Args:
+          filename (str): Full path of filename of song.
+
+        Returns:
+          Song: Song() object of song that was added.
+            Returns None if there was a problem.
+
+        .. todo:
+           Replace verbosity ``print`` with logger.
+
+        .. todo:
+           Raise errors instead of ``print`` and ``return None``
+        """
         print "Adding %s"%filename
         if self.find_song(filename):
             print "WTF: %s already cataloged"%filename
@@ -206,10 +260,23 @@ class SongCatalog(list):
         return song
 
     def list_all_songs_by_artist(self):
+        """Retrieve a hash table of all songs indexed by artist.
+
+        Returns:
+          dict: { <artist>: <songs[]> }
+        """
         d = {a:self.get_songs_by_artist(a) for a in self.list_artists()}
         return d
 
-    def get_songs_by_keyword(self,**kwargs):
+    def get_songs_by_keyword(self, **kwargs):
+        """Retrieve a list of songs that match key:val pairs.
+
+        Args:
+          kwargs: k:v pairs of Song() attributes to match
+
+        Returns:
+          list[Song]: List of songs whose attributes match kwargs.
+        """
         if len(kwargs.keys()) == 0:
             return []
         apl = [s for s in self]
@@ -219,17 +286,42 @@ class SongCatalog(list):
         return apl
 
     def list_artists(self):
+        """Retrieve a set of artists.
+
+        Returns:
+          set[str]: A unique set of all artists in catalog.
+        """
         artists = set();
         for s in self:
             artists.update(s.artist)
         return artists
 
-    def get_songs_by_artist(self,artist):
-        ''' Returns list of songs by exact match '''
+    def get_songs_by_artist(self, artist):
+        """Returns a list of songs by exact match of artist.
+
+        Because the artist attribute is stored as a list, this will match if 
+        given artist is one of them. i.e. This will match all solos and duets 
+        featuring the artist.
+
+        Args:
+          artist (str): Artist to match
+
+        Returns:
+          list[Song]: A list of songs by artist
+        """
         songs = [s for s in self if artist.lower() in [a.lower() for a in s.artist]]
         return songs 
 
-    def get_random_song(self,**kwargs):
+    def get_random_song(self, **kwargs):
+        """Finds a random song from the Catalog matching kwargs.
+
+        Args:
+          kwargs: Song attributes to match for list of songs from 
+            which to pick a random one.
+
+        Returns:
+          Song: A random song.
+        """
         songs = self
         print "get_random_song({})".format(kwargs)
         if len(kwargs.keys()) > 0:
@@ -237,12 +329,19 @@ class SongCatalog(list):
         num_songs = len(songs)
         if num_songs < 1:
             return None
-        song_num = random.randint(0,num_songs-1)
+        song_num = random.randint(0, num_songs-1)
         song = songs[song_num]
         return song
 
-    def find_songs_by_artist(self,artist):
-        ''' Returns list of songs by substring match '''
+    def find_songs_by_artist(self, artist):
+        """Returns a list of songs by substring match.
+
+        Args:
+          artist (str): Artist for which to search for songs.
+
+        Returns:
+          list[Song]: List of matching songs.
+        """
         songs = [s for s in self if artist.lower() in ''.join(s.artist).lower()]
         return songs 
 
