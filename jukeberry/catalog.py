@@ -170,7 +170,7 @@ class SongCatalog(list):
             print("WTF: Not a Song()")
             return None
         if self.find_song(song.filename):
-            print("WTF: %s already cataloged"%song.filename)
+            print("WTF: {} already cataloged".format(song.filename))
             return None
         return super(SongCatalog, self).append(song, *args, **kwargs)
 
@@ -211,23 +211,24 @@ class SongCatalog(list):
         .. todo:
            Raise errors instead of ``print`` and ``return None``
         """
-        print("Adding %s"%filename)
+        asciifilename = filename.encode('ascii', 'ignore')
+        print("Adding {}".format(asciifilename))
         if self.find_song(filename):
-            print("WTF: %s already cataloged"%filename)
+            print("WTF: {} already cataloged".format(asciifilename))
             return None
         try:
             ismp3 = eyed3.mp3.isMp3File(filename)
         except UnicodeDecodeError:
             ismp3 = False
         if ismp3 is not True:
-            print("WTF: %s is not an Mp3File"%filename)
+            print("WTF: {} is not an Mp3File".format(asciifilename))
             return None
         id3 = None
         id3=eyed3.load(filename)
         try:
             id3=eyed3.load(filename)
         except:
-            print("WTF: eyed3.load(%s) failed"%filename)
+            print("WTF: eyed3.load({}) failed".format(asciifilename))
             return None
         if id3 is None:
             return None
