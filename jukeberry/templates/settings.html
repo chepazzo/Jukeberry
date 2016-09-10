@@ -12,6 +12,14 @@
   <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='jukeberry.css')}}" />
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
   <script src="/JukeCtrl.js"></script>
+
+  <style>
+    #alwayson .active { color:red; }
+    #alwayson .button {
+        margin:2px;
+    }
+  </style>
+
  </head>
  <body>
   <div id='head'>
@@ -19,16 +27,18 @@
   </div><!-- id='head' -->
   <div id='body' class='raspi' ng-controller="JukeCtrl">
    <div id='alwayson'>
-     <div id='seton' class='clickable button'
-        ng-click='setalwayson(true);'>
-      on</div>
-     <div id='setoff' class='clickable button'
-        ng-click='setalwayson(false);'>
-      off</div>
+     <span id='seton' class='clickable button'
+        ng-click='set_alwayson(true);'
+        ng-class='{"active":alwayson.status}'
+      >on</span>
+     <span id='setoff' class='clickable button'
+        ng-click='set_alwayson(false);'
+        ng-class='{"active":!alwayson.status}'
+      >off</span>
    </div>
 
    <div>
-    {[currattr]}:{[currvalue]}
+    {[alwayson.filters.length > 0 ? alwayson.filters : "Everything"]}
    </div>
 
 <select ng-model="currattr">

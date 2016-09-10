@@ -62,7 +62,7 @@ class Jukebox(object):
         Dict Structure:
           status (bool): Is the Jukebox always on? If so, then a random song will play
             if the queue is empty.
-          filter (Dict[str,str]): This will filter the list of songs available to be
+          filters (List[Dict[str,str]]): This will filter the list of songs available to be
             randomly selected to play (if the filter is on), where the ``key`` is an
             attribute of ``catalog.Song``.
 
@@ -84,7 +84,7 @@ class Jukebox(object):
         self.playlist = []
         self.alwayson = {
             "status":False,
-            "filter":{}
+            "filters":[]
         }
         self.currsong = None
         self.proc = None
@@ -146,7 +146,9 @@ class Jukebox(object):
         if song is None:
             if self.alwayson['status']:
                 print("No next song ... finding random.")
-                song = self.songlist.get_random_song(**self.alwayson['filter'])
+                kwargs = {self.alwayson['filters'][0]['attr']:self.alwayson['filters'][0]['value']}
+                print("kwargs = ", kwargs)
+                song = self.songlist.get_random_song(**kwargs)
         filename = None
         if type(song) == catalog.Song:
             filename = song.filename

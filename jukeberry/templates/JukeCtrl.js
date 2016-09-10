@@ -7,7 +7,10 @@ jukeApp.config(['$interpolateProvider', function ($interpolateProvider) {
 
 jukeApp.controller('JukeCtrl', function ($scope,$http,$interval,$location) {
     // data
-    $scope.alwayson = false;
+    $scope.alwayson = {
+        "status":false,
+        "filters":[]
+    };
     $scope.tiles="#ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     $scope.songs = [];
     $scope.artists = [];
@@ -41,6 +44,7 @@ jukeApp.controller('JukeCtrl', function ($scope,$http,$interval,$location) {
             if (angular.isDefined(auto)) { return; }
             console.log('turning on auto refresh.');
             auto = $interval(function() {
+                $scope.get_alwayson();
                 $scope.get_playlist();
                 $scope.get_currsong();
             },10000);
@@ -60,7 +64,7 @@ jukeApp.controller('JukeCtrl', function ($scope,$http,$interval,$location) {
         //$location.replace();
         window.open(url);
     };
-    $scope.setalwayson = function(action) {
+    $scope.set_alwayson = function(action) {
         // The problem with this is that turning the feature off
         // resets the filter to the current attr:value.
         // This means that to put it back, you have to navigate first
@@ -71,16 +75,33 @@ jukeApp.controller('JukeCtrl', function ($scope,$http,$interval,$location) {
         var filter = {};
         var data = {
             "status":action,
-            "filter":filter
+            "filters":[filter]
         };
+        $scope.alwayson = data;
         if (attr != '' && value != '') {
-            filter[attr] = value;
+            filter['attr'] = attr;
+            filter['value'] = value;
         }
         var url = '{{url_for('set_alwayson')}}';
         var method = 'POST';
         $http(
             {method: method, url: url,data: JSON.stringify(data)}
         ).success(function(data, status) {
+            console.log(data.data);
+            console.log(status);
+        }).error(function(data, status) {
+            console.log('ERROR');
+            console.log(data);
+            console.log(status);
+        });
+    };
+    $scope.get_alwayson = function() {
+        var url = '{{url_for('get_alwayson')}}';
+        var method = 'GET';
+        $http(
+            {method: method, url: url}
+        ).success(function(data, status) {
+            $scope.alwayson = data.data;
             console.log(data.data);
             console.log(status);
         }).error(function(data, status) {
@@ -222,6 +243,7 @@ jukeApp.controller('JukeCtrl', function ($scope,$http,$interval,$location) {
     $scope.get_playlist();
     $scope.get_currsong();
     $scope.get_songs();
+    $scope.get_alwayson();
 });
 
 jukeApp.filter('secs2hms', function() {

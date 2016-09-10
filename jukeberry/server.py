@@ -219,8 +219,8 @@ def set_alwayson():
     else:
         if 'status' in content.keys():
             JUKE.alwayson['status'] = content['status']
-        if 'filter' in content.keys():
-            JUKE.alwayson['filter'] = content['filter']
+        if 'filters' in content.keys():
+            JUKE.alwayson['filters'] = content['filters']
     return jsonify(succ(value=JUKE.alwayson))
 
 @app.route('/add', methods = ['POST'])
