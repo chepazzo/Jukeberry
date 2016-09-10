@@ -224,7 +224,6 @@ class SongCatalog(list):
             print("WTF: {} is not an Mp3File".format(asciifilename))
             return None
         id3 = None
-        id3=eyed3.load(filename)
         try:
             id3=eyed3.load(filename)
         except:
