@@ -40,7 +40,7 @@ setup(name=__packagename__,
         'bin/juke-loadcatalog',
     ],
     data_files=[
-        ('/etc', ['config/jukeberry.conf']),
+        ('/etc', ['config/jukeberry.example.conf']),
         #('/etc/init.d/', ['install/deb/jukeberry']),
         #('/etc/init/', ['install/deb/jukeberry.conf']),
     ],

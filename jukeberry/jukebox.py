@@ -148,7 +148,10 @@ class Jukebox(object):
                 print("No next song ... finding random.")
                 ## This is kind of a hack until I can
                 ## code get_random_song to accept a list of args
-                kwargs = {self.alwayson['filters'][0]['attr']:self.alwayson['filters'][0]['value']}
+                kwargs = {}
+                for kw in self.alwayson['filters']:
+                    kwargs[kw['attr']] = kw['value']
+                #kwargs = {self.alwayson['filters'][0]['attr']:self.alwayson['filters'][0]['value']}
                 song = self.songlist.get_random_song(**kwargs)
         filename = None
         if type(song) == catalog.Song:
