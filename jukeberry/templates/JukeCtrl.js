@@ -75,12 +75,13 @@ jukeApp.controller('JukeCtrl', function ($scope,$http,$interval,$location) {
         var filter = {};
         var data = {
             "status":action,
-            "filters":[filter]
+            "filters":[]
         };
         $scope.alwayson = data;
         if (attr != '' && value != '') {
             filter['attr'] = attr;
             filter['value'] = value;
+            data.filters.push(filter);
         }
         var url = '{{url_for('set_alwayson')}}';
         var method = 'POST';

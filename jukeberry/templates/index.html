@@ -81,10 +81,11 @@
                  </table>
                </span>
              </li>
+             <li ng-show='alwayson.status && currsong'>
+                 A random selection from
+                 {[alwayson.filters.length > 0 ? alwayson.filters.0.attr+":"+alwayson.filters.0.value : "Everything"]}
+             </li>
          </ol>
-        <li ng-show='alwayson.status'>
-            A random selection from {[alwayson.filters.length > 0 ? alwayson.filters.0.value : "Everything"]}
-        </li>
        </div><!-- id='playlist' -->
      </div><!-- id='current' -->
 

@@ -37,18 +37,20 @@
       >off</span>
    </div>
 
+
+   <select ng-model="currattr">
+     <option value="">Select Attr</option>
+     <option value="artist">Artists</option>
+     <option value="genre">Genres</option>
+   </select>
+   <select ng-model="currvalue" ng-options="attr for attr in find_attrs(currattr).sort()">
+     <option value="">Select {[currattr]}</option>
+   </select>
    <div>
-    A random selection from {[alwayson.filters.length > 0 ? alwayson.filters.0.value : "Everything"]}
+    filters = {[alwayson.filters]}
    </div>
 
-<select ng-model="currattr">
-    <option value="">Select Attr</option>
-    <option value="artist">Artists</option>
-    <option value="genre">Genres</option>
-</select>
-<select ng-model="currvalue" ng-options="attr for attr in find_attrs(currattr).sort()">
-    <option value="">Select {[currattr]}</option>
-</select>
+   <div><a href='/'>back</a></div>
 
   </div><!-- id='body' -->
  </body>
