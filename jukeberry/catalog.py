@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
-'''
-Module to manage the songs.
-'''
+"""Module to manage the songs.
+"""
+
+from __future__ import print_function, absolute_import
+
 import os
 import time
 import json
 import eyed3
 import eyed3.mp3
-import utils
 import random
+
+from . import utils
 
 class Song(object):
     '''
@@ -149,7 +152,7 @@ class SongCatalog(list):
                 self.index(filename + "/", verbosity)
             elif filename.endswith(".mp3"):
                 if verbosity >= 2:
-                    print "Indexing file " + filename
+                    print("Indexing file " + filename)
                 self.add_song(filename)
 
     def append(self, song, *args, **kwargs):
@@ -164,10 +167,10 @@ class SongCatalog(list):
            Replace verbosity ``print`` with logger.
         """
         if type(song) != Song:
-            print "WTF: Not a Song()"
+            print("WTF: Not a Song()")
             return None
         if self.find_song(song.filename):
-            print "WTF: %s already cataloged"%song.filename
+            print("WTF: %s already cataloged"%song.filename)
             return None
         return super(SongCatalog, self).append(song, *args, **kwargs)
 
@@ -208,22 +211,23 @@ class SongCatalog(list):
         .. todo:
            Raise errors instead of ``print`` and ``return None``
         """
-        print "Adding %s"%filename
+        print("Adding %s"%filename)
         if self.find_song(filename):
-            print "WTF: %s already cataloged"%filename
+            print("WTF: %s already cataloged"%filename)
             return None
         try:
             ismp3 = eyed3.mp3.isMp3File(filename)
         except UnicodeDecodeError:
             ismp3 = False
         if ismp3 is not True:
-            print "WTF: %s is not an Mp3File"%filename
+            print("WTF: %s is not an Mp3File"%filename)
             return None
         id3 = None
+        id3=eyed3.load(filename)
         try:
             id3=eyed3.load(filename)
         except:
-            print "WTF: eyed3.load(%s) failed"%filename
+            print("WTF: eyed3.load(%s) failed"%filename)
             return None
         if id3 is None:
             return None
@@ -243,8 +247,8 @@ class SongCatalog(list):
             "secs": id3.info.time_secs,
         }
         if not tags["artist"] or not tags["title"]:
-            print "Artist or title not set in " + \
-                filename + " - skipping file"
+            print("Artist or title not set in " + \
+                filename + " - skipping file")
             return None
         song = Song(filename,
             artist=tags["artist"].split('/'),
@@ -254,9 +258,9 @@ class SongCatalog(list):
             year=tags["year"],
             secs=tags["secs"],
         )
-        #print "WTF: added %s"%song.title
+        #print("WTF: added %s"%song.title)
         self.append(song)
-        #print "WTF: That makes",len(self),"songs"
+        #print("WTF: That makes",len(self),"songs")
         return song
 
     def list_all_songs_by_artist(self):
@@ -323,7 +327,7 @@ class SongCatalog(list):
           Song: A random song.
         """
         songs = self
-        print "get_random_song({})".format(kwargs)
+        print("get_random_song({})".format(kwargs))
         if len(kwargs.keys()) > 0:
             songs = self.get_songs_by_keyword(**kwargs)
         num_songs = len(songs)
@@ -353,6 +357,6 @@ if __name__ == '__main__':
     catalog.index(medialib)
     etime = time.time()
     dtime = etime-stime
-    print
-    print
-    print len(catalog),"songs cataloged in",dtime,"seconds."
+    print()
+    print()
+    print(len(catalog),"songs cataloged in",dtime,"seconds.")

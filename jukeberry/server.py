@@ -1,7 +1,6 @@
 #/usr/bin/env python
 # -*- coding: utf-8 -*-
-'''
-This is the main server module that runs the Flask Server.
+"""This is the main server module that runs the Flask Server.
 
 Examples:
 
@@ -9,7 +8,10 @@ Examples:
 
     curl -i -H "Content-Type: application/json" -X POST -d '{"path":"/media/music/Misc/The Champs - Tequila.mp3"}' http://localhost:5000/add
 
-'''
+"""
+
+from __future__ import print_function, absolute_import
+
 import os
 import json
 from pprint import pprint as pp
@@ -22,7 +24,7 @@ except:
     FLASK_INSTALLED = False
 
 try:
-    import jukebox
+    from . import jukebox
     JUKE = jukebox.Jukebox()
     JUKEBOX_INSTALLED = True
 except:
@@ -248,8 +250,8 @@ def add():
             JUKE.playlist.append(song)
         else:
             return jsonify(fail("%s file does not exist."%songpath))
-        print "Added %s"%songpath
-        print "Starting Jukebox"
+        print("Added %s"%songpath)
+        print("Starting Jukebox")
     JUKE.start_jukebox()
     song_titles = [s.title for s in songs]
     return jsonify(succ(value=song_titles))
@@ -268,7 +270,7 @@ def add_random():
       | Example: ``{"genre":"Holiday"}``
     '''
     content = request.get_json(silent=True)
-    print "Random: {}".format(content)
+    print("Random: {}".format(content))
     song = JUKE.songlist.get_random_song(**content)
     if song is None:
         return jsonify(fail("No matching songs found."))
@@ -277,8 +279,8 @@ def add_random():
         JUKE.playlist.append(song)
     else:
         return jsonify(fail("%s file does not exist."%songpath))
-    print "Randomly added %s"%songpath
-    print "Starting Jukebox"
+    print("Randomly added %s"%songpath)
+    print("Starting Jukebox")
     JUKE.start_jukebox()
     return jsonify(succ(value=song.title))
 
@@ -315,10 +317,10 @@ def main():
     import sys
     JUKE.load_catalog()
     if 'debug' in sys.argv:
-        print "Flask DEBUG"
+        print("Flask DEBUG")
         app.run(debug = True)
     else:
-        print "Flask Production"
+        print("Flask Production")
         app.run(host='0.0.0.0')
 
 if __name__ == '__main__':
