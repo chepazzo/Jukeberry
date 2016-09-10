@@ -2,6 +2,8 @@
 '''
 Utility functions.
 '''
+from __future__ import print_function, absolute_import
+
 import subprocess
 import threading
 import time

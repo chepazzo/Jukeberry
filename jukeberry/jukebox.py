@@ -4,9 +4,7 @@
 This library controls the function of the jukebox player.
 '''
 
-#package modules
-import catalog
-import utils
+from __future__ import print_function, absolute_import
 
 #other modules
 import json
@@ -16,11 +14,16 @@ import random
 
 from pprint import pprint as pp
 
+#package modules
+from . import catalog, utils
+
+from .conf import settings
+
 #PLAYER = 'mpg123'
-PLAYER = 'omxplayer'
+#PLAYER = settings.GLOBAL['PLAYER']
 '''
  Filesystem executable to use to play music.
- Jukeberry will search the filesystem (``which ${PLAYER}``) for the fq path.
+ Jukeberry will search the filesystem (``which ${settings.GLOBAL['PLAYER']}``) for the fq path.
 
  BTW, omxplayer has MUCH better sound quality than mpg123 on Raspi.
 
@@ -31,7 +34,7 @@ PLAYER = 'omxplayer'
   overwritten by an option in a /etc/jukeberry.conf file
   (default=default).
 '''
-LIB = '/var/media/music/'
+#LIB = '/var/media/music/Tomahawk/'
 '''
  Directory of music library.
 
@@ -71,10 +74,12 @@ class Jukebox(object):
 
     '''
     def __init__(self,player=None,medialib=None):
-        if player is None:
-            player = PLAYER
-        if medialib is None:
-            medialib = LIB
+        self._player = None
+        self._medialib = None
+        if player is not None:
+            self.player = player
+        if medialib is not None:
+            self.medialib = medialib
         self.songlist = catalog.SongCatalog()
         self.playlist = []
         self.alwayson = {
@@ -83,8 +88,26 @@ class Jukebox(object):
         }
         self.currsong = None
         self.proc = None
-        self.player = utils.find_player(player)
-        self.medialib = medialib
+
+    @property
+    def player(self):
+        if self._player is None:
+            self.player = settings.GLOBAL['PLAYER']
+        return self._player
+    @player.setter
+    def player(self, val):
+        self._player = utils.find_player(val)
+        return self._player
+
+    @property
+    def medialib(self):
+        if self._medialib is None:
+            self.medialib = settings.GLOBAL['LIB']
+        return self._medialib
+    @medialib.setter
+    def medialib(self, val):
+        self._medialib = val
+        return self._medialib
 
     def load_catalog(self):
         '''
@@ -95,9 +118,9 @@ class Jukebox(object):
         self.songlist.index(self.medialib)
         etime = time.time()
         dtime = etime-stime
-        print
-        print
-        print len(self.songlist),"songs cataloged in",dtime,"seconds."
+        print()
+        print()
+        print(len(self.songlist),"songs cataloged in",dtime,"seconds.")
 
     def start_jukebox(self):
         '''
@@ -122,7 +145,7 @@ class Jukebox(object):
         song = self.get_next_song()
         if song is None:
             if self.alwayson['status']:
-                print "No next song ... finding random."
+                print("No next song ... finding random.")
                 song = self.songlist.get_random_song(**self.alwayson['filter'])
         filename = None
         if type(song) == catalog.Song:
@@ -163,9 +186,9 @@ if __name__ == '__main__':
     app.run(debug=True)
     '''
     if 'debug' in sys.argv:
-        print "Flask DEBUG"
+        print("Flask DEBUG")
         app.run(debug = True)
     else:
-        print "Flask Production"
+        print("Flask Production")
         app.run(host='0.0.0.0')
     '''
