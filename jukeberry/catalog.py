@@ -101,7 +101,7 @@ class Song(object):
         ## e.g.
         ## If you want to match on the Sinatra version of My Way
         ## but exclude any duets of the same song.
-        if '__iter__' in dir(val) and not '__iter__' in dir(v):
+        if isinstance(val, (list, tuple)) and not isinstance(v, (list, tuple)):
             return v in val
         return v == val
 
