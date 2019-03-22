@@ -1,3 +1,5 @@
+# Install in /etc/magic.mime
+
 # MPEG Layer 3 sound files
 0       beshort     &0xffe0     audio/mpeg
 !:mime  audio/mpeg

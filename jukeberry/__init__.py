@@ -30,6 +30,7 @@ DEFAULT_SETTINGS = """
 DEBUG=True
 THREADED=True
 SSL=False
+AUTOLOAD=False
 PLAYER=omxplayer
 #PLAYER=mpg123
 LIB=/var/media/music/
@@ -40,7 +41,7 @@ HOST=0.0.0.0
 PORT=5000
 """
 
-settings.bool_fields = ['DEBUG', 'SSL']
+settings.bool_fields = ['DEBUG', 'AUTOLOAD', 'SSL', 'THREADED']
 settings.int_fields = ['PORT']
 settings.float_fields = []
 settings.cust_fields = {}

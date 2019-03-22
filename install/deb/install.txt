@@ -5,21 +5,16 @@
 echo jukeberry > /etc/hostname
 mkdir -p /var/media/music/{usb1,usb2}
 
-apt-get update
-apt-get -y mpg321 git python python-pip avahi-daemon
+apt update && apt -fy mpg321 git python3 python3-pip avahi-daemon
 
-pip install --allow-external eyeD3 --allow-unverified eyeD3 eyed3
-pip install flask
-
-## Make symlinks
-ln -s /usr/bin/python2 /usr/bin/python
-ln -s /usr/bin/pip2 /usr/bin/pip
+pip3 install --allow-external eyeD3 --allow-unverified eyeD3 eyed3
+pip3 install flask
 
 ## Update /etc/fstab
 echo '/dev/root  /  ext4  noatime,discard  0  0' >> /etc/fstab
 echo 'tmpfs   /var/log        tmpfs   nodev,nosuid,size=16M   0       0' >> /etc/fstab
-echo '/dev/sda1  /var/media/music/usb1           auto    defaults,nofail        0       0' >> /etc/fstab
-echo '/dev/sdb1  /var/media/music/usb2           auto    defaults,nofail        0       0' >> /etc/fstab
+echo '/dev/sda1  /var/media/music/usb1    auto    defaults,nofail,x-systemd.device-timeout=1,gid=1000,uid=1000  0 0' >> /etc/fstab
+echo '/dev/sdb1  /var/media/music/usb2    auto    defaults,nofail,x-systemd.device-timeout=1,gid=1000,uid=1000  0 0' >> /etc/fstab
 
 sh -c 'echo "KERNEL==\"sda\", RUN+=\"/bin/mount /var/media/music/usb1\"" >> /etc/udev/rules.d/99-mount.rules'
 sh -c 'echo "KERNEL==\"sdb\", RUN+=\"/bin/mount /var/media/music/usb2\"" >> /etc/udev/rules.d/99-mount.rules'

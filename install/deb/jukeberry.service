@@ -1,0 +1,23 @@
+## systemd .service file 
+## Use for installing on archlinux as a service
+##
+## Install as:
+## /lib/systemd/system/jukeberry.service
+##
+## Activate with:
+## sudo systemctl enable jukeberry.service
+##
+
+[Unit]
+Description=Jukeberry Daemon
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/start_jukeberry -i /etc/jukeberry.conf --autoload
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
