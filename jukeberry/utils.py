@@ -24,7 +24,10 @@ def find_player(name=None):
     if name is None:
         return None
     p=subprocess.Popen(["which", name],stdin=subprocess.PIPE,stdout=subprocess.PIPE)
-    return p.stdout.read().replace("\n", "")
+    output = str(p.stdout.read(), 'utf-8')
+    if not output:
+        return None
+    return output.strip()
 
 def _popenAndCall(onExit, popenArgs):
     """

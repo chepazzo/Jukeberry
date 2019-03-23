@@ -114,6 +114,9 @@ class Jukebox(object):
         Invoke the ``catalog.SongCatalog.index`` function to 
           scan the ``medialib`` for songs.
         '''
+        if self.player is None:
+            print("Unable to find player, not bothering to load catalog!")
+            return
         stime = time.time()
         self.songlist.index(self.medialib)
         etime = time.time()
@@ -140,6 +143,9 @@ class Jukebox(object):
           playing.
 
         '''
+        if self.player is None:
+            print("Unable to find player, not bothering to load catalog!")
+            return
         ## Clear current playing song
         self.currsong = None
         song = self.get_next_song()
@@ -160,6 +166,7 @@ class Jukebox(object):
             filename = song
         if filename is not None:
             self.currsong = song
+            print("PLAYER = "+self.player)
             currthread = utils._popenAndCall(self.play_next_song,([self.player,filename],))
 
     def add_songs_to_playlist(self,**kwargs):
