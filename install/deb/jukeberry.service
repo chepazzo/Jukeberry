@@ -13,7 +13,7 @@ Description=Jukeberry Daemon
 
 [Service]
 Type=simple
-ExecStart=/usr/local/bin/start_jukeberry -i /etc/jukeberry.conf --autoload
+ExecStart=/usr/local/bin/start_jukeberry -i /etc/jukeberry.conf
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=process
 Restart=always
