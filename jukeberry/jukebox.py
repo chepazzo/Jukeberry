@@ -31,7 +31,7 @@ from .conf import settings
   or a config option where default setup
   would look for the existance of omxplayer (raspi only)
   and set the env var appropriately, but could be
-  overwritten by an option in a /etc/jukeberry.conf file
+  overwritten by an option in a /etc/jukeberry.ini file
   (default=default).
 '''
 #LIB = '/var/media/music/Tomahawk/'

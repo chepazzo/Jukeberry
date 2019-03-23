@@ -1,0 +1,9 @@
+---
+- name: Install Jukeberry
+  hosts: jukeberry
+  remote_user: ansible
+  become: yes
+
+  roles:
+    - { role: jukeberry, tags: ['jukeberry'] }
+

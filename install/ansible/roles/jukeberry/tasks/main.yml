@@ -1,0 +1,80 @@
+##
+## Installs Jukeberry on Raspbian
+##
+- name: "Verify directory structures prior to mounts"
+  file:
+    path: "{{item}}"
+    state: "directory"
+  loop:
+    - "/var/media/music/usb1"
+    - "/var/media/music/usb2"
+
+- name: "Install Packages"
+  apt:
+    name: "{{ item }}"
+    state: "present"
+  with_items:
+  - "mpg321"
+  - "python3"
+  - "python3-pip"
+  - "avahi-daemon"
+  tags:
+  - "apt"
+
+- name: "Install pip packages"
+  pip:
+    name: "{{ item }}"
+    executable: "pip3"
+    state: "present"
+    extra_args: "--allow-external eyeD3 --allow-unverified eyeD3"
+  loop:
+  - "eyed3"
+  tags: "pip"
+
+- name: "Setup Mounts"
+  mount:
+    path: "{{item.dst}}"
+    src: "{{item.src}}"
+    fstype: "auto"
+    state: "mounted"
+    opts: "defaults,nofail,x-systemd.device-timeout=1,gid=1000,uid=1000"
+  loop:
+  - dst: "/var/media/music/usb1"
+    src: "/dev/sda1"
+  - dst: "/var/media/music/usb2"
+    src: "/dev/sdb1"
+  tags:
+  - "mounts"
+
+- name: "Creating udev rules"
+  copy:
+    src: "{{item}}"
+    dest: "/etc/udev/rules.d/{{item}}"
+  loop:
+  - "99-mount.rules"
+
+- name: "Creating mime config"
+  copy:
+    src: "{{item}}"
+    dest: "/etc/{{item}}"
+  loop:
+  - "magic.mime"
+
+- name: "Install Jukeberry"
+  pip:
+    name: "git+https://github.com/chepazzo/jukeberry.git"
+    executable: "pip3"
+    state: "present"
+
+- name: "Setup systemd files"
+  copy:
+    src: "jukeberry.service"
+    dest: "/etc/systemd/system/jukeberry.service"
+
+- name: "Start Jukeberry"
+  systemd:
+    state: "started"
+    enabled: "yes"
+    name: "jukeberry"
+    daemon_reload: "yes"
+
