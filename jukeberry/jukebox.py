@@ -118,12 +118,13 @@ class Jukebox(object):
             print("Unable to find player, not bothering to load catalog!")
             return
         stime = time.time()
-        self.songlist.index(self.medialib)
+        songs = self.songlist.index(self.medialib)
         etime = time.time()
         dtime = etime-stime
         print()
         print()
         print(len(self.songlist),"songs cataloged in",dtime,"seconds.")
+        return songs
 
     def start_jukebox(self):
         '''

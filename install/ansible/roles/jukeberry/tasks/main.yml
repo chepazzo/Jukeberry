@@ -36,7 +36,7 @@
     path: "{{item.dst}}"
     src: "{{item.src}}"
     fstype: "auto"
-    state: "mounted"
+    state: "present"
     opts: "defaults,nofail,x-systemd.device-timeout=1,gid=1000,uid=1000"
   loop:
   - dst: "/var/media/music/usb1"
@@ -46,12 +46,33 @@
   tags:
   - "mounts"
 
+## separate task because nothing will mount
+## if no USB drive present, but we still want
+## the entries in fstab
+- name: "Mount USB Drives"
+  mount:
+    path: "{{item.dst}}"
+    src: "{{item.src}}"
+    fstype: "auto"
+    state: "mounted"
+    opts: "defaults,nofail,x-systemd.device-timeout=1,gid=1000,uid=1000"
+  loop:
+  - dst: "/var/media/music/usb1"
+    src: "/dev/sda1"
+  - dst: "/var/media/music/usb2"
+    src: "/dev/sdb1"
+  changed_when: False
+  tags:
+  - "mounts"
+
 - name: "Creating udev rules"
   copy:
     src: "{{item}}"
     dest: "/etc/udev/rules.d/{{item}}"
   loop:
   - "99-mount.rules"
+  tags:
+  - "mounts"
 
 - name: "Creating mime config"
   copy:

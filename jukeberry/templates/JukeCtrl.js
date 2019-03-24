@@ -7,6 +7,7 @@ jukeApp.config(['$interpolateProvider', function ($interpolateProvider) {
 
 jukeApp.controller('JukeCtrl', function ($scope,$http,$interval,$location) {
     // data
+    $scope.catalogloaded = true;
     $scope.alwayson = {
         "status":false,
         "filters":[]
@@ -160,6 +161,9 @@ jukeApp.controller('JukeCtrl', function ($scope,$http,$interval,$location) {
             console.log(data.data);
             $scope.artists = find_attrs(data.data,'artist');
             $scope.genres = find_attrs(data.data,'genre');
+            if (data.data.length == 0) {
+                $scope.catalogloaded = false;
+            }
         }).error(function(data, status) {
             console.log('ERROR');
             console.log(data);
@@ -175,6 +179,22 @@ jukeApp.controller('JukeCtrl', function ($scope,$http,$interval,$location) {
             $scope.artists = data.data;
             console.log(data.data);
         }).error(function(data, status) {
+            console.log('ERROR');
+            console.log(data);
+            console.log(status);
+        });
+    };
+    $scope.load_catalog = function() {
+        $scope.catalogloaded = true; // de-activate the link
+        var url = '{{url_for('load_catalog')}}';
+        var method = 'GET';
+        $http(
+            {method: method, url: url}
+        ).success(function(data, status) {
+            console.log(data.data);
+            $scope.get_songs();
+        }).error(function(data, status) {
+            $scope.catalogloaded = false;
             console.log('ERROR');
             console.log(data);
             console.log(status);
@@ -241,10 +261,13 @@ jukeApp.controller('JukeCtrl', function ($scope,$http,$interval,$location) {
     $scope.find_attrs = function(attr) {
         return find_attrs($scope.songs,attr);
     };
-    $scope.get_playlist();
-    $scope.get_currsong();
-    $scope.get_songs();
-    $scope.get_alwayson();
+    $scope.refresh = function() {
+        $scope.get_playlist();
+        $scope.get_currsong();
+        $scope.get_songs();
+        $scope.get_alwayson();
+    };
+    $scope.refresh();
 });
 
 jukeApp.filter('secs2hms', function() {

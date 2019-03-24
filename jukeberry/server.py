@@ -123,10 +123,11 @@ def load_catalog():
     Loads catalog from disk.
 
     Returns:
-      json(list): A serialized list of songs currently in the playlist
+      json(list): A serialized list of songs added
     '''
-    JUKE.load_catalog()
-    retval = [s._serialize() for s in JUKE.playlist]
+    songs = JUKE.load_catalog()
+    #retval = [s.title for s in songs]
+    retval = [s._serialize(skip=['filename']) for s in songs]
     return jsonify(succ(value=retval))
 
 @app.route('/get/artists')

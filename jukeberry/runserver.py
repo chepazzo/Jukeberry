@@ -36,6 +36,8 @@ def get_args():
     args = get_parser().parse_args()
     settings.load(args.i)
     ## If args set in cmdline, override in settings.
+    if args.port is not None:
+        settings.WEB['PORT'] = args.port
     if args.ssl is not None:
         settings.GLOBAL['SSL'] = args.ssl
     if args.threaded is not None:
@@ -59,6 +61,7 @@ def get_parser():
     parser.add_argument('--no-ssl', dest='ssl', action='store_false', default=None, help="Disable ssl")
     parser.add_argument('--thread', dest='threaded', action='store_true', default=None, help="Enable threading")
     parser.add_argument('--no-thread', dest='threaded', action='store_false', default=None, help="Disable threading")
+    parser.add_argument('--port', type=int, default=None, help="TCP port for web server")
     parser.add_argument('--crt', default=None, help="Path to ssl crt")
     parser.add_argument('--key', default=None, help="Path to ssl key")
     return parser

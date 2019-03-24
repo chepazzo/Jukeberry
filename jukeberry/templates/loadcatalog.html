@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<!--
+    ***THIS PAGE NEEDS A LOT OF WORK!***
+    I need a place to allow me to toggle the autoplay feature.
+    But, I don't want everyone changing it on whim.
+    Eventually, I need to create an admin login.
+ -->
+<html ng-app='jukeApp'>
+ <head>
+  <title>Jukeberry Load Catalog</title>
+  <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='raspi.css')}}" />
+  <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='jukeberry.css')}}" />
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
+  <script src="/JukeCatalogCtrl.js"></script>
+
+  <style>
+    #alwayson .active { color:red; }
+    #alwayson .button {
+        margin:2px;
+    }
+  </style>
+
+ </head>
+ <body>
+  <div id='head'>
+   <div id='title'>Jukeberry Load Catalog</div>
+  </div><!-- id='head' -->
+  <div id='body' class='raspi' ng-controller="JukeCatalogCtrl">
+
+   <div id='load_catalog'>
+     <span class='clickable button'
+        ng-click='load_catalog();'
+      >doit already</span>
+   </div>
+
+  </div><!-- id='body' -->
+ </body>
+</html>
+
+

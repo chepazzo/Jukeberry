@@ -14,7 +14,8 @@
 }
 #body.raspi div#views {
     width: 320px;
-    height: 219px;
+    /* height: 219px; */
+    height: 155px;
     border-top: solid black thin;
     overflow: auto;
 }
@@ -29,7 +30,7 @@
   <div id='body' class='raspi' ng-controller="JukeCtrl">
    <div id="navbar">
      <div id='currbutt' class='clickable button' 
-        ng-click='currvalue="";currattr="";setsection("current");' 
+        ng-click='currvalue="";currattr="";setsection("current");refresh();' 
         ng-class="{'active':issection('current')}">
       Top</div>
      <div id='artistsbutt' class='clickable button' 
@@ -87,6 +88,7 @@
              </li>
          </ol>
        </div><!-- id='playlist' -->
+       <div id='loadcatalog' class='link' ng-show='catalogloaded == false' ng-click='load_catalog()'>load catalog</div>
      </div><!-- id='current' -->
 
      <div id='songlist' class='view' ng-show='issection("songlist") || issection("browse");'>

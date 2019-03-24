@@ -146,6 +146,7 @@ class SongCatalog(list):
         if not path.endswith("/"):
             path += "/"
         listing = os.listdir(path)
+        songs = []
         for filename in listing:
             filename = path + filename
             if os.path.isdir(filename):
@@ -153,7 +154,10 @@ class SongCatalog(list):
             elif filename.endswith(".mp3"):
                 if verbosity >= 2:
                     print("Indexing file " + filename)
-                self.add_song(filename)
+                song = self.add_song(filename)
+                if song is not None:
+                    songs.append(song)
+        return songs
 
     def append(self, song, *args, **kwargs):
         """Add Song() object to list if it does not already exist.
