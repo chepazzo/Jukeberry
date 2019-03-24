@@ -1,6 +1,6 @@
 ---
 - name: Install Jukeberry
-  hosts: jukeberry
+  hosts: all
   remote_user: ansible
   become: yes
 

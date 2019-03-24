@@ -10,17 +10,14 @@ Install
    b. You need to add your local key to the ansible user's
       authorized_keys.
 
-2. Update the `hosts` file
-   You want to make sure that your target pi is listed
-   in the `[Jukeberry]` group.
-
 3. Run ansible
    ```
-   ansible-playbook -i hosts jukeberry.yml
+   ansible-playbook -i <jukeberry IP>, jukeberry.yml
    ```
+   Don't forget the `,` after the <jukeberry IP>.
 4. Load Music Library
-   Navigate to http://<jukeberry ip addr>:5000/loadcatalog
+   Navigate to http://<jukeberry IP>:5000/loadcatalog
 
 5. Enjoy
-   Navigate to http://<jukeberry ip addr>:5000 and play some music!
+   Navigate to http://<jukeberry IP>:5000 and play some music!
 
