@@ -12,12 +12,12 @@ Install
 
 3. Run ansible
    ```
-   ansible-playbook -i <jukeberry IP>, jukeberry.yml
+   ansible-playbook -i {jukeberry IP}, jukeberry.yml
    ```
-   Don't forget the `,` after the <jukeberry IP>.
+   Don't forget the `,` after the `{jukeberry IP}`.
 4. Load Music Library
-   Navigate to http://<jukeberry IP>:5000/loadcatalog
+   Navigate to http://{jukeberry IP}:5000/loadcatalog
 
 5. Enjoy
-   Navigate to http://<jukeberry IP>:5000 and play some music!
+   Navigate to http://{jukeberry IP}:5000 and play some music!
 
