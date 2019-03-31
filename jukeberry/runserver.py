@@ -54,7 +54,7 @@ def get_args():
 
 def get_parser():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("-i", default='/etc/ipapi.conf', help="Specify config file")
+    parser.add_argument("-i", default='/etc/jukeberry.conf', help="Specify config file")
     parser.add_argument('--autoload', action='store_true', default=None, help="Autoload lib at startup")
     parser.add_argument('--debug', action='store_true', default=None, help="Enable debug mode")
     parser.add_argument('--ssl', dest='ssl', action='store_true', default=None, help="Enable ssl")

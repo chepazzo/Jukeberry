@@ -15,7 +15,7 @@
 #body.raspi div#views {
     width: 320px;
     /* height: 219px; */
-    height: 155px;
+    height: 190px;
     border-top: solid black thin;
     overflow: auto;
 }
@@ -29,6 +29,7 @@
   </div><!-- id='head' -->
   <div id='body' class='raspi' ng-controller="JukeCtrl">
    <div id="navbar">
+    <div id="navbarslider">
      <div id='currbutt' class='clickable button' 
         ng-click='currvalue="";currattr="";setsection("current");refresh();' 
         ng-class="{'active':issection('current')}">
@@ -53,6 +54,7 @@
         ng-click='play_random();'
         ng-show='issection("songlist");'>
       Songs</div>
+    </div><!-- id="navbarslider" -->
    </div><!-- id="navbar" -->
 
    <div id='views'>

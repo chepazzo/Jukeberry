@@ -31,7 +31,14 @@
 /* Navbar CSS */
 #navbar {
     /* height:20px; */
-    height:84px;
+    height:50px;
+    width: 320px;
+    overflow: auto;
+}
+#navbarslider {
+    /* height:20px; */
+    width: 640px;
+    height:42px;
 }
 #navbar .active { color:red; }
 #navbar div.button { 
@@ -39,12 +46,12 @@
     border: solid thin black;
     margin: 3px;
     padding: 3px;
-    width: 82px;
+    width: 92px;
     height:28px;
     font-size: 22px;
     text-align: center;
 }
-#navbar div.clickable:hover { text-decoration:underline; color:blue; }
+#navbar div.clickable:hover { text-decoration:underline; color:blue; background: #FAFAFA; }
 
 
 /* Song CSS */
