@@ -99,3 +99,8 @@
     name: "jukeberry"
     daemon_reload: "yes"
 
+- name: "Enable kiosk on startup"
+  lineinfile:
+    path: '/home/{{ user }}/.config/lxsession/LXDE-pi/autostart'
+    line: '@chromium-browser --kiosk http://localhost:5000/'
+

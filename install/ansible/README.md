@@ -11,10 +11,16 @@ Install
       authorized_keys.
 
 3. Run ansible
+   ```bash
+   ansible-playbook -i -k -K {{ jukeberry IP }}, -e 'user={{ user }}' jukeberry.yml
    ```
-   ansible-playbook -i {jukeberry IP}, jukeberry.yml
+   * Don't forget the `,` after the `{{ jukeberry IP }}`.
+   * The `{{ user }}` is probably going to be `pi`
+   e.g.
+   ```bash
+   ansible-playbook -i -k -K 192.168.0.200, -e 'user=pi' jukeberry.yml
    ```
-   Don't forget the `,` after the `{jukeberry IP}`.
+
 4. Load Music Library
    Navigate to http://{jukeberry IP}:5000/loadcatalog
 

@@ -40,10 +40,10 @@
         ng-class="{'active':issection('current')}"
         ng-show="!issection('current');">
       Top</div>
-     <div id='loadcatalog' class='clickable button' style='font-size: 18px'
+     <div id='loadcatalog' class='clickable button'
         ng-show='catalogloaded == false'
         ng-click='load_catalog()'>
-      Load Music</div>
+      Load ...</div>
      <div id='artistsbutt' class='clickable button' 
         ng-click='currattr="artist";setsection("attributes");' 
         ng-class="issection('attributes') && currattr=='artist' ? 'active' : ''">
