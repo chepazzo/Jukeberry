@@ -6,7 +6,7 @@ any computer with python installed.
 '''
 from __future__ import print_function, absolute_import
 
-__version__ = '2.1'
+__version__ = '2.1.1'
 __author__ = 'Mike Biacaniello'
 __maintainer__ = 'Mike Biacaniello'
 __email__ = 'chepazzo@gmail.com'

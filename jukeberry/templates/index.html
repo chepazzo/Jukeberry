@@ -5,17 +5,22 @@
   <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='raspi.css')}}" />
   <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='jukeberry.css')}}" />
   <style>
+#alwayson .active { color:red; }
+#alwayson .button {
+    margin:2px;
+}
+
 #raspi { display: none; }
 #body.raspi {
     margin:auto;
-    width: 320px;
-    height: 240px;
+    width: 620px;
+    height: 421px;
     border: solid black thin;
 }
 #body.raspi div#views {
-    width: 320px;
+    width: 620px;
     /* height: 219px; */
-    height: 190px;
+    height: 371px;
     border-top: solid black thin;
     overflow: auto;
 }
@@ -32,8 +37,13 @@
     <div id="navbarslider">
      <div id='currbutt' class='clickable button' 
         ng-click='currvalue="";currattr="";setsection("current");refresh();' 
-        ng-class="{'active':issection('current')}">
+        ng-class="{'active':issection('current')}"
+        ng-show="!issection('current');">
       Top</div>
+     <div id='loadcatalog' class='clickable button' style='font-size: 18px'
+        ng-show='catalogloaded == false'
+        ng-click='load_catalog()'>
+      Load Music</div>
      <div id='artistsbutt' class='clickable button' 
         ng-click='currattr="artist";setsection("attributes");' 
         ng-class="issection('attributes') && currattr=='artist' ? 'active' : ''">
@@ -54,6 +64,10 @@
         ng-click='play_random();'
         ng-show='issection("songlist");'>
       Songs</div>
+     <div id='settingsbutt' class='clickable button' 
+        ng-click='setsection("settings");' 
+        ng-class="{'active':issection('settings')}">
+      Settings</div>
     </div><!-- id="navbarslider" -->
    </div><!-- id="navbar" -->
 
@@ -90,7 +104,6 @@
              </li>
          </ol>
        </div><!-- id='playlist' -->
-       <div id='loadcatalog' class='link' ng-show='catalogloaded == false' ng-click='load_catalog()'>load catalog</div>
      </div><!-- id='current' -->
 
      <div id='songlist' class='view' ng-show='issection("songlist") || issection("browse");'>
@@ -107,6 +120,30 @@
           </li>
         </ol>
      </div><!-- id='songlist' -->
+
+     <div id='settings' class='view' ng-show='issection("settings");'>
+      <div id='alwayson'>
+        <span id='seton' class='clickable button'
+           ng-click='set_alwayson(true);'
+           ng-class='{"active":alwayson.status}'
+         >on</span>
+        <span id='setoff' class='clickable button'
+           ng-click='set_alwayson(false);'
+           ng-class='{"active":!alwayson.status}'
+         >off</span>
+      </div>
+      <select ng-model="currattr">
+        <option value="">Select Attr</option>
+        <option value="artist">Artists</option>
+        <option value="genre">Genres</option>
+      </select>
+      <select ng-model="currvalue" ng-options="attr for attr in find_attrs(currattr).sort()">
+        <option value="">Select {[currattr]}</option>
+      </select>
+      <div>
+       filters = {[alwayson.filters]}
+      </div>
+     </div><!-- id='settings' -->
 
      <div id='attributes' class='view' ng-show='issection("attributes")'>
        <div class='label'>Select {[currattr]}:</div>

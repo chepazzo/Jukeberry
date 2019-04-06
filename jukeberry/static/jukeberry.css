@@ -15,7 +15,7 @@
  }
  div#body,div#head {
     margin:auto;
-    width: 320px;
+    width: 622px;
  }
  #head div#title {
     text-align:center;
@@ -31,13 +31,14 @@
 /* Navbar CSS */
 #navbar {
     /* height:20px; */
-    height:50px;
-    width: 320px;
+    height:55px;
+    width: 622px;
     overflow: auto;
 }
 #navbarslider {
     /* height:20px; */
-    width: 640px;
+    width: 746px;
+    /* width: 622px; */
     height:42px;
 }
 #navbar .active { color:red; }
