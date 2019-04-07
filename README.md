@@ -72,18 +72,18 @@ See example config file for detailed explanation of options
 
 The config file follows a standard .ini file format.
 
-**DEBUG** Default: False
-**AUTOLOAD** Default: False
-**THREADED** Default: True
-**SSL** Default: False
-**PLAYER** Default: omxplayer
-**LIB** Default: /var/media/music/
+**DEBUG** Default: False  
+**AUTOLOAD** Default: False  
+**THREADED** Default: True  
+**SSL** Default: False  
+**PLAYER** Default: omxplayer  
+**LIB** Default: /var/media/music/  
 
-**SSL_CRT** /path/to/crt.crt (only valid when SSL is true)
-**SSL_KEY** /path/to/key.key (only valid when SSL is true)
+**SSL_CRT** /path/to/crt.crt (only valid when SSL is true)  
+**SSL_KEY** /path/to/key.key (only valid when SSL is true)  
 
-**HOST** Default: 0.0.0.0
-**PORT** Default: 5000
+**HOST** Default: 0.0.0.0  
+**PORT** Default: 5000  
 
 ## Raspberry-specific Setup
 

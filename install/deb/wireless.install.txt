@@ -1,13 +1,25 @@
 
-pacman -Syu
-pacman -S wpa_suppliment
+# Setup Wifi
 
-cd /etc/netctl
-install -m640 examples/wireless-wpa wireless-home
+## Configure
 
-## Modify to suit your wifi
+Compiled from [raspberrypi.org](https://www.raspberrypi.org/documentation/configuration/wireless/wireless-cli.md)
 
-netctl start wireless-home
-netctl enable wireless-home
+1. Add the following to `/etc/wpa_supplicant/wpa_supplicant.conf` (modify to suit your network)
 
+```
+network={
+    ssid="{{ ssid }}"
+    key_mgmt=WPA-PSK
+    psk="{{ psk }}"
+    country=US
+    priority=1
+}
+```
+
+2. Update the network config with:
+
+```
+wpa_cli -i wlan0 reconfigure
+```
 
