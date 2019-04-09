@@ -40,7 +40,7 @@ setup(name=__packagename__,
         'bin/juke-loadcatalog',
     ],
     data_files=[
-        ('/etc', ['config/jukeberry.ini']),
+        ('/etc', ['config/jukeberry.example.ini']),
     ],
     entry_points={
         'console_scripts': {
