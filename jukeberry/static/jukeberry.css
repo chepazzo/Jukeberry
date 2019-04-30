@@ -1,5 +1,5 @@
  html {
-    font-size: 11px;
+    font-size: 22px;
     font-family:sans-serif;
  }
  .clickable {
@@ -18,8 +18,9 @@
     width: 622px;
  }
  #head div#title {
+    height: 38px;
     text-align:center;
-    font-size: 3em;
+    font-size: 33px;
  }
  div.label {
     font-size: 1.5em;
@@ -56,6 +57,7 @@
 
 
 /* Song CSS */
+div.song { font-size: 22px; }
 .song .name { color:red; }
 .song .artist { color:green; }
 .song .album { color:green; }

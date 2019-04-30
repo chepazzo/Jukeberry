@@ -37,7 +37,7 @@
     src: "{{item.src}}"
     fstype: "auto"
     state: "present"
-    opts: "defaults,nofail,x-systemd.device-timeout=1,gid=1000,uid=1000"
+    opts: "defaults,rw,nofail,x-systemd.device-timeout=1,gid=1000,uid=1000"
   loop:
   - dst: "/var/media/music/usb1"
     src: "/dev/sda1"
@@ -55,7 +55,7 @@
     src: "{{item.src}}"
     fstype: "auto"
     state: "mounted"
-    opts: "defaults,nofail,x-systemd.device-timeout=1,gid=1000,uid=1000"
+    opts: "defaults,rw,nofail,x-systemd.device-timeout=1,gid=1000,uid=1000"
   loop:
   - dst: "/var/media/music/usb1"
     src: "/dev/sda1"

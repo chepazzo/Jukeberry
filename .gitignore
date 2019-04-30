@@ -1,5 +1,6 @@
 *.py[cod]
 docs/_*
+*.retry
 
 # C extensions
 *.so

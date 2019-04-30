@@ -20,7 +20,7 @@
 #body.raspi div#views {
     width: 620px;
     /* height: 219px; */
-    height: 371px;
+    height: 361px;
     border-top: solid black thin;
     overflow: auto;
 }
@@ -77,26 +77,26 @@
        <div id='currsong' class='section'>
         <span class='label'>Currently Playing:</span> 
            <ul ng-show='currsong'><li>
-             <span class='song'>
+             <div class='song'>
                <span class='name'>{[currsong.title]}</span> <span class='time'>[{[currsong.secs|secs2hms:'h:m:s']}]</span><br />
                <table class='details'>
                  <tr><td class='label'>Artist(s):</td><td><span class='artist'>{[currsong.artist.join(",")]}</span></td></tr>
                  <tr><td class='label'>Album:</td><td><span class='album'>{[currsong.album]}</span></td></tr>
                </table><!-- class='details' -->
-             </span>
+             </div>
            </li></ul>
        </div><!-- id='currsong' -->
        <div id='playlist' class='section'>
         <span class='label'>Next Up:</span> <span class='time' ng-show='playlist.length'>[{[get_playlist_length()|secs2hms:'h:m:s']}]</span>
          <ol>
              <li ng-repeat='song in playlist'>
-               <span class='song'>
+               <div class='song'>
                  <span class='name'>{[song.title]}</span> <span class='time'>[{[song.secs|secs2hms:'h:m:s']}]</span><br />
                  <table class='details'>
                    <tr><td class='label'>Artist(s):</td><td><span class='artist'>{[song.artist.join(",")]}</span></td></tr>
                    <tr><td class='label'>Album:</td><td><span class='album'>{[song.album]}</span></td></tr>
                  </table>
-               </span>
+               </div>
              </li>
              <li ng-show='alwayson.status && currsong'>
                  A random selection from
@@ -110,13 +110,13 @@
         <div class='label' ng-show='currvalue != ""'>{[currattr]}:{[currvalue]}</div>
         <ol class='songs'>
           <li class='clickable' ng-repeat='song in find_songs(currattr,currvalue) | orderBy:"title"'>
-              <span class='song' ng-click='play(song.artist,song.title);setsection("current");'>
+              <div class='song' ng-click='play(song.artist,song.title);setsection("current");'>
                 <span class='name'>{[song.title]}</span>
                 <table class='details'>
                   <tr><td class='label'>Artist(s):</td><td><span class='artist'>{[song.artist.join(",")]}</span></td></tr>
                   <tr><td class='label'>Album:</td><td><span class='album'>{[song.album]}</span></td></tr>
                 </table><!-- class='details' -->
-              </span>
+              </div>
           </li>
         </ol>
      </div><!-- id='songlist' -->
