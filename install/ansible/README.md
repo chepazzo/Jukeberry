@@ -12,7 +12,7 @@ Install
 
 3. Run ansible
    ```bash
-   ansible-playbook -i -k -K {{ jukeberry IP }}, -e 'user={{ user }}' jukeberry.yml
+   ansible-playbook -k -K -i {{ jukeberry IP }}, -e 'user={{ user }}' jukeberry.yml
    ```
    * Don't forget the `,` after the `{{ jukeberry IP }}`.
    * The `{{ user }}` is probably going to be `pi`
