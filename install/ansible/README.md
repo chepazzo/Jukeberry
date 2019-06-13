@@ -18,7 +18,7 @@ Install
    * The `{{ user }}` is probably going to be `pi`
    e.g.
    ```bash
-   ansible-playbook -i -k -K 192.168.0.200, -e 'user=pi' jukeberry.yml
+   ansible-playbook -k -K -i 192.168.0.200, -e 'user=pi' jukeberry.yml
    ```
 
 4. Load Music Library
