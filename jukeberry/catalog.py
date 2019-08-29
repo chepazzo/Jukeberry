@@ -10,6 +10,7 @@ import json
 import eyed3
 import eyed3.mp3
 import random
+import itertools
 
 from . import utils
 
@@ -255,9 +256,9 @@ class SongCatalog(list):
                 filename + " - skipping file")
             return None
         song = Song(filename,
-            artist=tags["artist"].split('/'),
+            artist=split_tag(tags["artist"], 2),
             album=tags["album"],
-            genre=tags["genre"].split('/'),
+            genre=split_tag(tags["genre"], 2),
             title=tags["title"],
             year=tags["year"],
             secs=tags["secs"],
@@ -302,6 +303,8 @@ class SongCatalog(list):
         artists = set();
         for s in self:
             artists.update(s.artist)
+            if len(s.artist) > 1:
+                artists.update(['+'.join(s.artist)])
         return artists
 
     def get_songs_by_artist(self, artist):
@@ -352,6 +355,25 @@ class SongCatalog(list):
         """
         songs = [s for s in self if artist.lower() in ''.join(s.artist).lower()]
         return songs 
+
+def split_tag(attr, combo=0):
+    """Splits the attribute by '/' and optionally creates combinations.
+
+    Args:
+      attr (str): Attribute string to split
+      combo (int): The number of combos to create
+                   Default: 0
+
+    Returns:
+      list[str]: List of attributes
+    """
+    attrlist = attr.split('/')
+    if combo > 1:
+        if len(attrlist) > 1:
+            comboattrs = [ '+'.join(sorted(x)) for x in itertools.combinations(attrlist, combo) ]
+            attrlist.extend(comboattrs)
+            print("Expanded {} to {}".format(attr, attrlist))
+    return attrlist
 
 if __name__ == '__main__':
     ''' test module '''
