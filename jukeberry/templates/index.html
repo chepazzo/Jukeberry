@@ -80,7 +80,7 @@
              <div class='song'>
                <span class='name'>{[currsong.title]}</span> <span class='time'>[{[currsong.secs|secs2hms:'h:m:s']}]</span><br />
                <table class='details'>
-                 <tr><td class='label'>Artist(s):</td><td><span class='artist'>{[currsong.artist.join(",")]}</span></td></tr>
+                 <tr><td class='label'>Artist(s):</td><td><span class='artist'>{[ (currsong.artist | filter:'!+').join(',') ]}</span></td></tr>
                  <tr><td class='label'>Album:</td><td><span class='album'>{[currsong.album]}</span></td></tr>
                </table><!-- class='details' -->
              </div>
@@ -93,7 +93,7 @@
                <div class='song'>
                  <span class='name'>{[song.title]}</span> <span class='time'>[{[song.secs|secs2hms:'h:m:s']}]</span><br />
                  <table class='details'>
-                   <tr><td class='label'>Artist(s):</td><td><span class='artist'>{[song.artist.join(",")]}</span></td></tr>
+                   <tr><td class='label'>Artist(s):</td><td><span class='artist'>{[ (song.artist | filter:'!+').join(',') ]}</span></td></tr>
                    <tr><td class='label'>Album:</td><td><span class='album'>{[song.album]}</span></td></tr>
                  </table>
                </div>
@@ -113,7 +113,7 @@
               <div class='song' ng-click='play(song.artist,song.title);setsection("current");'>
                 <span class='name'>{[song.title]}</span>
                 <table class='details'>
-                  <tr><td class='label'>Artist(s):</td><td><span class='artist'>{[song.artist.join(",")]}</span></td></tr>
+                  <tr><td class='label'>Artist(s):</td><td><span class='artist'>{[ (song.artist | filter:'!+').join(',') ]}</span></td></tr>
                   <tr><td class='label'>Album:</td><td><span class='album'>{[song.album]}</span></td></tr>
                 </table><!-- class='details' -->
               </div>
