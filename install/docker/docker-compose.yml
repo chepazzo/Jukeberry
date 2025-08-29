@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  jukeberry:
+    build:
+      context: ../../
+      dockerfile: install/docker/Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./music:/music
+      - ./config:/config
+    restart: unless-stopped

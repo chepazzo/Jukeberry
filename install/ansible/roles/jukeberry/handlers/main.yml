@@ -1,0 +1,7 @@
+---
+# handlers file for jukeberry
+- name: restart jukeberry
+  become: true
+  ansible.builtin.systemd:
+    name: jukeberry
+    state: restarted

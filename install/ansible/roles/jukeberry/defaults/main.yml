@@ -1,0 +1,29 @@
+---
+# defaults file for jukeberry
+
+# The user to run the jukeberry service as
+jukeberry_user: "pi"
+
+# The group to run the jukeberry service as
+jukeberry_group: "pi"
+
+# The directory to install jukeberry to
+jukeberry_install_dir: "/opt/jukeberry"
+
+# The source of the jukeberry code to install from a git repo
+jukeberry_repo_src: "https://github.com/chepazzo/jukeberry.git"
+jukeberry_repo_version: "main"
+
+# Set to true to install from local source instead of git repo
+# This is useful for development.
+jukeberry_local_install: false
+jukeberry_local_path: "/path/to/local/jukeberry/repo"
+
+# The path to the music library
+music_library_path: "/var/media/music"
+
+# The audio player to use (e.g., mpg321, omxplayer)
+jukeberry_player: "mpg321"
+
+# Configuration file path
+jukeberry_config_file: "/etc/jukeberry.conf"

@@ -1,0 +1,13 @@
+[Unit]
+Description=Jukeberry Music Player
+After=network.target
+
+[Service]
+User={{ jukeberry_user }}
+Group={{ jukeberry_group }}
+WorkingDirectory={{ jukeberry_install_dir }}
+ExecStart=/usr/bin/python3 -m jukeberry.server --config {{ jukeberry_config_file }}
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

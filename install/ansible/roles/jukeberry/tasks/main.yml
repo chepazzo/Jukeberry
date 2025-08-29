@@ -1,103 +1,85 @@
-##
-## Installs Jukeberry on Raspbian
-##
-- name: "Verify directory structures prior to mounts"
-  file:
-    path: "{{item}}"
-    state: "directory"
+---
+- name: Install system dependencies
+  become: true
+  ansible.builtin.apt:
+    name: ["python3", "python3-pip", "git", "{{ jukeberry_player }}"]
+    state: present
+    update_cache: true
+
+- name: Create the Jukeberry group
+  become: true
+  ansible.builtin.group:
+    name: "{{ jukeberry_group }}"
+    state: present
+
+- name: Create the Jukeberry user
+  become: true
+  ansible.builtin.user:
+    name: "{{ jukeberry_user }}"
+    group: "{{ jukeberry_group }}"
+    shell: /bin/bash
+    create_home: true
+
+- name: Create application directories
+  become: true
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ jukeberry_user }}"
+    group: "{{ jukeberry_group }}"
+    mode: '0755'
   loop:
-    - "/var/media/music/usb1"
-    - "/var/media/music/usb2"
+    - "{{ jukeberry_install_dir }}"
+    - "{{ music_library_path }}"
 
-- name: "Install Packages"
-  apt:
-    name: "{{ item }}"
-    state: "present"
-  with_items:
-  - "mpg321"
-  - "python3"
-  - "python3-pip"
-  - "avahi-daemon"
-  tags:
-  - "apt"
+- name: Deploy Jukeberry from git
+  become: true
+  ansible.builtin.git:
+    repo: "{{ jukeberry_repo_src }}"
+    dest: "{{ jukeberry_install_dir }}"
+    version: "{{ jukeberry_repo_version }}"
+    force: true
+  when: not jukeberry_local_install
 
-- name: "Install pip packages"
-  pip:
-    name: "{{ item }}"
-    executable: "pip3"
-    state: "present"
-    extra_args: "--allow-external eyeD3 --allow-unverified eyeD3"
-  loop:
-  - "eyed3"
-  tags: "pip"
+- name: Deploy Jukeberry from local source
+  become: true
+  ansible.builtin.copy:
+    src: "{{ jukeberry_local_path }}/"
+    dest: "{{ jukeberry_install_dir }}/"
+  when: jukeberry_local_install
 
-- name: "Setup Mounts"
-  mount:
-    path: "{{item.dst}}"
-    src: "{{item.src}}"
-    fstype: "auto"
-    state: "present"
-    opts: "defaults,rw,nofail,x-systemd.device-timeout=1,gid=1000,uid=1000"
-  loop:
-  - dst: "/var/media/music/usb1"
-    src: "/dev/sda1"
-  - dst: "/var/media/music/usb2"
-    src: "/dev/sdb1"
-  tags:
-  - "mounts"
+- name: Install Python dependencies
+  become: true
+  ansible.builtin.pip:
+    requirements: "{{ jukeberry_install_dir }}/requirements.txt"
+    executable: pip3
 
-## separate task because nothing will mount
-## if no USB drive present, but we still want
-## the entries in fstab
-- name: "Mount USB Drives"
-  mount:
-    path: "{{item.dst}}"
-    src: "{{item.src}}"
-    fstype: "auto"
-    state: "mounted"
-    opts: "defaults,rw,nofail,x-systemd.device-timeout=1,gid=1000,uid=1000"
-  loop:
-  - dst: "/var/media/music/usb1"
-    src: "/dev/sda1"
-  - dst: "/var/media/music/usb2"
-    src: "/dev/sdb1"
-  changed_when: False
-  tags:
-  - "mounts"
+- name: Create Jukeberry configuration file
+  become: true
+  ansible.builtin.template:
+    src: jukeberry.conf.j2
+    dest: "{{ jukeberry_config_file }}"
+    owner: root
+    group: root
+    mode: '0644'
 
-- name: "Creating udev rules"
-  copy:
-    src: "{{item}}"
-    dest: "/etc/udev/rules.d/{{item}}"
-  loop:
-  - "99-mount.rules"
-  tags:
-  - "mounts"
+- name: Create systemd service file
+  become: true
+  ansible.builtin.template:
+    src: jukeberry.service.j2
+    dest: /etc/systemd/system/jukeberry.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart jukeberry
 
-- name: "Creating mime config"
-  copy:
-    src: "{{item}}"
-    dest: "/etc/{{item}}"
-  loop:
-  - "magic.mime"
-
-- name: "Install Jukeberry"
-  pip:
-    name: "git+https://github.com/chepazzo/jukeberry.git"
-    executable: "pip3"
-    state: "present"
-
-- name: "Setup systemd files"
-  copy:
-    src: "jukeberry.service"
-    dest: "/etc/systemd/system/jukeberry.service"
-
-- name: "Start Jukeberry"
-  systemd:
-    state: "started"
-    enabled: "yes"
-    name: "jukeberry"
-    daemon_reload: "yes"
+- name: Ensure Jukeberry service is started and enabled
+  become: true
+  ansible.builtin.systemd:
+    name: jukeberry
+    state: started
+    enabled: true
+    daemon_reload: true
 
 - name: "Enable kiosk on startup"
   lineinfile:
