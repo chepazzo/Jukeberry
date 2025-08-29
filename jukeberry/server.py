@@ -17,8 +17,8 @@ import json
 from pprint import pprint as pp
 
 try:
-    from flask import Flask, render_template, request, jsonify
-    app = Flask(__name__)
+    from flask import Flask, render_template, request, jsonify, send_from_directory
+    app = Flask(__name__, static_folder='../frontend/dist', static_url_path='/')
     FLASK_INSTALLED = True
 except:
     FLASK_INSTALLED = False
@@ -30,90 +30,15 @@ try:
 except:
     JUKEBOX_INSTALLED = False
 
-## Pages
-
-@app.route('/')
-def top():
-    '''
-    The main route that points to index.html
-    '''
-    return render_template('index.html',
-        list=list,
-    )
-
-@app.route('/JukeCtrl.js')
-def jukectrljs():
-    '''
-    AngularJS control javascript.
-    '''
-    return render_template('JukeCtrl.js')
-
-@app.route('/settings.html')
-def settings():
-    '''
-    The settings view to modify player settings.
-    '''
-    return render_template('settings.html',
-        list=list,
-    )
-
-@app.route('/current.html')
-def onepage():
-    '''
-    Former front page.
-
-    ** Need to depricate **
-    '''
-    return render_template('current.html',
-        list=list,
-    )
-
-@app.route('/artists.html')
-def artists():
-    '''
-    Former list artists page.
-
-    ** Need to depricate **
-    '''
-    return render_template('artists.html')#,
-    #    artists=sorted(JUKE.songlist.list_artists())
-    #)
-
-@app.route('/genres.html')
-def genres():
-    '''
-    Former list genres page.
-
-    ** Need to depricate **
-    '''
-    return render_template('genres.html')#,
-
-@app.route('/artist/<string:artist>/songs.html')
-def songs_by_artist(artist):
-    '''
-    Former songs by artist page.
-
-    ** Need to depricate **
-    '''
-    #artist = request.args.get('artist')
-    return render_template('songs.html',
-    #    json=json,
-    #    songs=JUKE.songlist.get_songs_by_artist(artist),
-        field='artist',
-        value=artist
-    )
-
-@app.route('/genre/<string:genre>/songs.html')
-def songs_by_genre(genre):
-    '''
-    Former songs by genrte page.
-
-    ** Need to depricate **
-    '''
-    return render_template('songs.html',
-        field='genre',
-        value=genre
-    )
+## API Catch-all Route
+# This must be the first route defined to catch all non-API paths
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
+    if path != "" and os.path.exists(app.static_folder + '/' + path):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
 
 ## API
 

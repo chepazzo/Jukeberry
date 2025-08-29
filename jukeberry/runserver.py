@@ -6,6 +6,7 @@ from __future__ import print_function, absolute_import
 
 import sys
 import argparse
+import urllib.request
 from .conf import settings
 from . import server
 import sys
@@ -32,6 +33,35 @@ def main():
         print("running flask: host={}, port={}, debug={}, threaded={}".format(settings.WEB['HOST'], settings.WEB['PORT'], debug, threaded))
         server.app.run(host=settings.WEB['HOST'], port=settings.WEB['PORT'], debug=debug, threaded=threaded)
 
+def load_catalog_main():
+    """
+    Command-line utility to trigger the catalog load API endpoint.
+    """
+    args = get_parser().parse_args()
+    settings.load(args.i)
+    if args.port is not None:
+        settings.WEB['PORT'] = args.port
+
+    host = settings.WEB.get('HOST', '0.0.0.0')
+    # Use localhost for requests if host is set to 0.0.0.0
+    if host == '0.0.0.0':
+        host = 'localhost'
+
+    port = settings.WEB.get('PORT', 5000)
+    protocol = 'https' if settings.GLOBAL.get('SSL') else 'http'
+    url = "{}://{}:{}/loadcatalog".format(protocol, host, port)
+
+    print("Requesting catalog load from {}...".format(url))
+
+    try:
+        with urllib.request.urlopen(url, timeout=30) as response:
+            print("Response Status: {}".format(response.status))
+            print("Catalog load initiated successfully.")
+    except urllib.error.URLError as e:
+        print("Error connecting to server: {}".format(e), file=sys.stderr)
+        sys.exit(1)
+
+
 def get_args():
     args = get_parser().parse_args()
     settings.load(args.i)
@@ -54,7 +84,7 @@ def get_args():
 
 def get_parser():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("-i", default='/etc/jukeberry.conf', help="Specify config file")
+    parser.add_argument("-i", default='jukeberry.conf', help="Specify config file (default: jukeberry.conf in current directory)")
     parser.add_argument('--autoload', action='store_true', default=None, help="Autoload lib at startup")
     parser.add_argument('--debug', action='store_true', default=None, help="Enable debug mode")
     parser.add_argument('--ssl', dest='ssl', action='store_true', default=None, help="Enable ssl")

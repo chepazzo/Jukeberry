@@ -21,8 +21,8 @@ desc = __shortdesc__
 long_desc = __doc__
 
 requires = [
-    'Flask>=0.10.1',
-    'eyeD3>=0.7.5',
+    'Flask>=2.0.0',
+    'eyeD3>=0.9.0',
 ]
 
 setup(name=__packagename__,
@@ -36,15 +36,10 @@ setup(name=__packagename__,
     packages=find_packages(),
     install_requires=requires,
     include_package_data=True,
-    scripts=[
-        'bin/juke-loadcatalog',
-    ],
-    data_files=[
-        ('/etc', ['config/jukeberry.example.ini']),
-    ],
     entry_points={
-        'console_scripts': {
+        'console_scripts': [
             'start_jukeberry = jukeberry.runserver:main',
-        }
+            'juke-loadcatalog = jukeberry.runserver:load_catalog_main',
+        ]
     },
 )
