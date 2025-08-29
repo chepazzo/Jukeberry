@@ -27,3 +27,10 @@ jukeberry_player: "mpg321"
 
 # Configuration file path
 jukeberry_config_file: "/etc/jukeberry.conf"
+
+# --- Optional USB Automount ---
+# Set to true to enable automatic mounting of USB drives
+jukeberry_automount_usb: false
+
+# The name of the udev rules file to use for automounting
+jukeberry_udev_rules_file: "99-usb-mount.rules"

@@ -6,6 +6,13 @@
     state: present
     update_cache: true
 
+- name: Install USB automount dependencies
+  become: true
+  ansible.builtin.apt:
+    name: ["udisks2"]
+    state: present
+  when: jukeberry_automount_usb
+
 - name: Create the Jukeberry group
   become: true
   ansible.builtin.group:
@@ -73,6 +80,17 @@
     mode: '0644'
   notify: restart jukeberry
 
+- name: Deploy udev rule for USB automount
+  become: true
+  ansible.builtin.template:
+    src: 99-usb-mount.rules.j2
+    dest: "/etc/udev/rules.d/{{ jukeberry_udev_rules_file }}"
+    owner: root
+    group: root
+    mode: '0644'
+  when: jukeberry_automount_usb
+  notify: reload udev rules
+
 - name: Ensure Jukeberry service is started and enabled
   become: true
   ansible.builtin.systemd:
@@ -80,13 +98,4 @@
     state: started
     enabled: true
     daemon_reload: true
-
-- name: "Enable kiosk on startup"
-  lineinfile:
-    path: '/home/{{ user }}/.config/lxsession/LXDE-pi/autostart'
-    line: '@chromium-browser --kiosk http://localhost:5000/'
-    create: 'yes'
-    mode: '0600'
-    owner: '{{ user }}'
-    group: '{{ user }}'
 
