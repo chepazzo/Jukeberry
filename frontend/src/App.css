@@ -35,3 +35,69 @@
   padding: 20px;
   overflow-y: auto;
 }
+
+/* Song CSS */
+div.song {
+  font-size: 22px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  background-color: #f9f9f9;
+}
+
+div.song:hover {
+  background-color: #f0f0f0;
+}
+
+.song .name {
+  color: red;
+  font-weight: bold;
+}
+
+.song .time {
+  color: #666;
+  margin-left: 10px;
+}
+
+.song .artist {
+  color: green;
+}
+
+.song .album {
+  color: green;
+}
+
+.song table.details {
+  margin-left: 5px;
+  margin-top: 5px;
+}
+
+.song table.details td.label {
+  text-align: right;
+  padding-right: 5px;
+  font-style: italic;
+  color: #555;
+}
+
+/* Grid for Artists/Genres */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 15px;
+}
+
+.grid-item {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 18px;
+  border-radius: 8px;
+}
+
+.grid-item:hover {
+  background-color: #e0e0e0;
+  border-color: #999;
+}

@@ -1,25 +1,22 @@
 import React from 'react';
-import type { Song, AlwaysOnConfig } from '../services/api';
+import type { Song, AutoPlayConfig } from '../services/api';
 import { formatSeconds } from '../utils/time';
+import SongItem from './SongItem';
 
 interface CurrentViewProps {
   currentSong: Song | null;
   playlist: Song[];
-  alwaysOn: AlwaysOnConfig | null;
+  autoPlay: AutoPlayConfig | null;
 }
 
-const CurrentView: React.FC<CurrentViewProps> = ({ currentSong, playlist, alwaysOn }) => {
+const CurrentView: React.FC<CurrentViewProps> = ({ currentSong, playlist, autoPlay }) => {
   const totalPlaylistSecs = playlist.reduce((acc, song) => acc + song.secs, 0);
   return (
     <div>
       <div>
         <h2>Currently Playing</h2>
         {currentSong ? (
-          <div>
-            <strong>{currentSong.title}</strong> ({formatSeconds(currentSong.secs)}) by {currentSong.artist.join(', ')}
-            <br />
-            <em>{currentSong.album}</em>
-          </div>
+          <SongItem song={currentSong} />
         ) : (
           <p>Nothing is currently playing.</p>
         )}
@@ -28,21 +25,19 @@ const CurrentView: React.FC<CurrentViewProps> = ({ currentSong, playlist, always
       <div style={{ marginTop: '20px' }}>
         <h2>Next Up ({formatSeconds(totalPlaylistSecs)})</h2>
         {playlist.length > 0 ? (
-          <ol>
+          <div className="song-list-container">
             {playlist.map((song, index) => (
-              <li key={index}>
-                <strong>{song.title}</strong> by {song.artist.join(', ')}
-              </li>
+              <SongItem key={index} song={song} />
             ))}
-          </ol>
+          </div>
         ) : (
           <p>The playlist is empty.</p>
         )}
-        {alwaysOn?.status && (
+        {autoPlay?.status && (
           <p style={{ marginTop: '10px', fontStyle: 'italic' }}>
-            Always On is active.
-            {alwaysOn.filters.length > 0 &&
-              ` Filtering by: ${alwaysOn.filters[0].attr}: ${alwaysOn.filters[0].value}`}
+            Auto Play is active.
+            {Object.keys(autoPlay.filters).length > 0 &&
+              ` Filtering by: ${Object.keys(autoPlay.filters)[0]}: ${Object.values(autoPlay.filters)[0]}`}
           </p>
         )}
       </div>

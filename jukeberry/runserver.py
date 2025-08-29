@@ -49,7 +49,7 @@ def load_catalog_main():
 
     port = settings.WEB.get('PORT', 5000)
     protocol = 'https' if settings.GLOBAL.get('SSL') else 'http'
-    url = "{}://{}:{}/loadcatalog".format(protocol, host, port)
+    url = "{}://{}:{}/api/loadcatalog".format(protocol, host, port)
 
     print("Requesting catalog load from {}...".format(url))
 

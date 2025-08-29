@@ -1,6 +1,7 @@
 *.py[cod]
 docs/_*
 *.retry
+jukeberry.conf
 
 # C extensions
 *.so

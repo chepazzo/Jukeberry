@@ -12,13 +12,13 @@ const ArtistsView: React.FC<ArtistsViewProps> = ({ artists, onSelectArtist }) =>
       {artists.length === 0 ? (
         <p>Loading artists...</p>
       ) : (
-        <ul>
+        <div className="grid-container">
           {artists.map((artist) => (
-            <li key={artist} onClick={() => onSelectArtist(artist)} style={{ cursor: 'pointer' }}>
+            <div key={artist} className="grid-item" onClick={() => onSelectArtist(artist)}>
               {artist}
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );

@@ -57,7 +57,7 @@ class Jukebox(object):
       medialib (str): Fully qualified path to directory of music library.
       songlist (catalog.SongCatalog): List of all songs loaded from medialib.
       playlist (List[catalog.Song]): List of songs in queue.
-      alwayson (Dict[str,any]): The alwayson filter data.
+      autoplay (Dict[str,any]): The autoplay filter data.
 
         Dict Structure:
           status (bool): Is the Jukebox always on? If so, then a random song will play
@@ -82,7 +82,7 @@ class Jukebox(object):
             self.medialib = medialib
         self.songlist = catalog.SongCatalog()
         self.playlist = []
-        self.alwayson = {
+        self.autoplay = {
             "status":False,
             "filters":[]
         }
@@ -151,14 +151,14 @@ class Jukebox(object):
         self.currsong = None
         song = self.get_next_song()
         if song is None:
-            if self.alwayson['status']:
+            if self.autoplay['status']:
                 print("No next song ... finding random.")
                 ## This is kind of a hack until I can
                 ## code get_random_song to accept a list of args
                 kwargs = {}
-                for kw in self.alwayson['filters']:
+                for kw in self.autoplay['filters']:
                     kwargs[kw['attr']] = kw['value']
-                #kwargs = {self.alwayson['filters'][0]['attr']:self.alwayson['filters'][0]['value']}
+                #kwargs = {self.autoplay['filters'][0]['attr']:self.autoplay['filters'][0]['value']}
                 song = self.songlist.get_random_song(**kwargs)
         filename = None
         if type(song) == catalog.Song:

@@ -12,13 +12,13 @@ const GenresView: React.FC<GenresViewProps> = ({ genres, onSelectGenre }) => {
       {genres.length === 0 ? (
         <p>Loading genres...</p>
       ) : (
-        <ul>
+        <div className="grid-container">
           {genres.map((genre) => (
-            <li key={genre} onClick={() => onSelectGenre(genre)} style={{ cursor: 'pointer' }}>
+            <div key={genre} className="grid-item" onClick={() => onSelectGenre(genre)}>
               {genre}
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );

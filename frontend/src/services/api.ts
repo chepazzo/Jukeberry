@@ -11,94 +11,79 @@ export interface AlwaysOnFilter {
   value: string;
 }
 
-export interface AlwaysOnConfig {
+export interface AutoPlayConfig {
   status: boolean;
-  filters: AlwaysOnFilter[];
+  filters: Record<string, string>;
 }
 
 // The API response seems to be wrapped in a 'data' object.
 interface ApiResponse<T> {
+  status: 'success' | 'fail';
   data: T;
+  message?: string;
 }
 
 const API_BASE_URL = '/api';
 
-export const getSongs = async (): Promise<Song[]> => {
-  const response = await fetch(`${API_BASE_URL}/get_songs`);
+const fetchApi = async <T>(url: string, options?: RequestInit): Promise<T> => {
+  const response = await fetch(`${API_BASE_URL}${url}`, options);
   if (!response.ok) {
-    throw new Error('Failed to fetch songs');
+    throw new Error(`HTTP error! status: ${response.status}`);
   }
-  const result: ApiResponse<Song[]> = await response.json();
+  const result: ApiResponse<T> = await response.json();
+  if (result.status === 'fail') {
+    throw new Error(result.message || 'API request failed');
+  }
   return result.data;
 };
 
-export const getCurrentSong = async (): Promise<Song | null> => {
-  const response = await fetch(`${API_BASE_URL}/get_currsong`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch current song');
-  }
-  const result: ApiResponse<Song | null> = await response.json();
-  return result.data;
-};
+export const getSongs = (): Promise<Song[]> => fetchApi('/get/songs');
 
-export const getPlaylist = async (): Promise<Song[]> => {
-  const response = await fetch(`${API_BASE_URL}/get_playlist`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch playlist');
-  }
-  const result: ApiResponse<Song[]> = await response.json();
-  return result.data;
-};
+export const getPlaylist = (): Promise<Song[]> => fetchApi('/get/playlist');
 
-export const addSongToPlaylist = async (artist: string, title: string): Promise<void> => {
-  const response = await fetch(`${API_BASE_URL}/add`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ artist, title }),
-    });
+export const getCurrentSong = (): Promise<Song | null> => fetchApi('/get/currsong');
 
-  if (!response.ok) {
-    throw new Error('Failed to add song to playlist');
-  }
-};
+export const loadCatalog = (): Promise<Song[]> => fetchApi('/loadcatalog');
 
-export const addRandomSongToPlaylist = async (filter?: { type: 'artist' | 'genre'; value: string }): Promise<void> => {
-  const response = await fetch(`${API_BASE_URL}/add_random`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: filter ? JSON.stringify({ [filter.type]: filter.value }) : JSON.stringify({}),
-    });
-
-  if (!response.ok) {
-    throw new Error('Failed to add random song');
-  }
-};
-
-export const getAlwaysOn = async (): Promise<AlwaysOnConfig> => {
-  const response = await fetch(`${API_BASE_URL}/get_alwayson`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch always on config');
-  }
-  const result: ApiResponse<AlwaysOnConfig> = await response.json();
-  return result.data;
-};
-
-export const setAlwaysOn = async (config: AlwaysOnConfig): Promise<void> => {
-  const response = await fetch(`${API_BASE_URL}/set_alwayson`, {
+export const addSongToPlaylist = (song: Partial<Song>): Promise<void> => 
+  fetchApi('/add', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(config),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(song),
   });
 
-  if (!response.ok) {
-    throw new Error('Failed to set always on config');
-  }
-};
+export const addRandomSong = (filters: Record<string, string>): Promise<void> => 
+  fetchApi('/add_random', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(filters),
+  });
+
+export const removeSongFromPlaylist = (id: number): Promise<void> => 
+  fetchApi('/rm', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id }),
+  });
+
+export const play = (): Promise<void> => fetchApi('/play', { method: 'POST' });
+
+export const pause = (): Promise<void> => fetchApi('/pause', { method: 'POST' });
+
+export const skip = (): Promise<void> => fetchApi('/skip', { method: 'POST' });
+
+export const setVolume = (level: number): Promise<void> => 
+  fetchApi('/volume', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ level }),
+  });
+
+export const getAutoPlay = (): Promise<AutoPlayConfig> => fetchApi('/get/autoplay');
+
+export const setAutoPlay = (settings: AutoPlayConfig): Promise<void> => 
+  fetchApi('/set/autoplay', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(settings),
+  });

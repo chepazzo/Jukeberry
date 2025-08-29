@@ -151,13 +151,24 @@ class SongCatalog(list):
         for filename in listing:
             filename = path + filename
             if os.path.isdir(filename):
-                self.index(filename + "/", verbosity)
-            elif filename.endswith(".mp3"):
-                if verbosity >= 2:
-                    print("Indexing file " + filename)
-                song = self.add_song(filename)
-                if song is not None:
-                    songs.append(song)
+                songs.extend(self.index(filename + "/", verbosity))
+            else:
+                if os.path.isfile(filename):
+                    try:
+                        audiofile = eyed3.load(filename)
+                        # If audiofile is None, it's not a supported format or is corrupt.
+                        if audiofile is None or audiofile.info is None:
+                            continue
+                    except (UnicodeDecodeError, ValueError):
+                        print("WTF: eyed3.load({}) failed with error: {}".format(asciifilename, e))
+                        # Catches potential decoding errors or other issues within eyed3
+                        continue
+
+                    if audiofile.tag is None:
+                        audiofile.initTag()
+                    song = self.add_song(filename)
+                    if song is not None:
+                        songs.append(song)
         return songs
 
     def append(self, song, *args, **kwargs):
@@ -175,7 +186,7 @@ class SongCatalog(list):
             print("WTF: Not a Song()")
             return None
         if self.find_song(song.filename):
-            print("WTF: {} already cataloged".format(song.filename))
+            #print("WTF: {} already cataloged".format(song.filename))
             return None
         return super(SongCatalog, self).append(song, *args, **kwargs)
 
@@ -217,27 +228,24 @@ class SongCatalog(list):
            Raise errors instead of ``print`` and ``return None``
         """
         asciifilename = filename.encode('ascii', 'ignore')
-        print("Adding {}".format(asciifilename))
         if self.find_song(filename):
-            print("WTF: {} already cataloged".format(asciifilename))
+            #print("WTF: {} already cataloged".format(asciifilename))
             return None
         try:
-            ismp3 = eyed3.mp3.isMp3File(filename)
-        except UnicodeDecodeError:
-            ismp3 = False
-        if ismp3 is not True:
-            print("WTF: {} is not an Mp3File".format(asciifilename))
+            print("Adding {}".format(asciifilename))
+            id3 = eyed3.load(filename)
+            # If id3 is None, it's not a supported format or is corrupt.
+            # Also check for id3.info, as some files load but have no info.
+            if id3 is None or id3.info is None:
+                print("WTF: {} is not a valid audio file or is corrupt".format(asciifilename))
+                return None
+        except Exception as e:
+            print("WTF: eyed3.load({}) failed with error: {}".format(asciifilename, e))
             return None
-        id3 = None
-        try:
-            id3=eyed3.load(filename)
-        except:
-            print("WTF: eyed3.load({}) failed".format(asciifilename))
-            return None
-        if id3 is None:
-            return None
-        if getattr(id3,'tag',None) is None:
-            return None
+
+        # Ensure the file has a tag object
+        if id3.tag is None:
+            id3.initTag()
         genre = getattr(id3.tag,'genre',None)
         if genre:
             genre = genre.name
@@ -256,9 +264,9 @@ class SongCatalog(list):
                 filename + " - skipping file")
             return None
         song = Song(filename,
-            artist=split_tag(tags["artist"], 2),
+            artist=split_tag(tags["artist"], 0),
             album=tags["album"],
-            genre=split_tag(tags["genre"], 2),
+            genre=split_tag(tags["genre"], 0),
             title=tags["title"],
             year=tags["year"],
             secs=tags["secs"],

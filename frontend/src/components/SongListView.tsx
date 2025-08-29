@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Song } from '../services/api';
-import { formatSeconds } from '../utils/time';
+import SongItem from './SongItem';
 
 interface SongListViewProps {
   songs: Song[];
@@ -13,13 +13,11 @@ const SongListView: React.FC<SongListViewProps> = ({ songs, onAddSong }) => {
   }
 
   return (
-    <ul>
+    <div className="song-list-container">
       {songs.map((song, index) => (
-        <li key={index} onClick={() => onAddSong(song.artist.join(','), song.title)} style={{ cursor: 'pointer' }}>
-          <strong>{song.title}</strong> ({formatSeconds(song.secs)}) by {song.artist.join(', ')} - <em>{song.album}</em>
-        </li>
+        <SongItem key={index} song={song} onClick={onAddSong} />
       ))}
-    </ul>
+    </div>
   );
 };
 

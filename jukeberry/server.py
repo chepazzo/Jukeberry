@@ -1,13 +1,6 @@
-#/usr/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """This is the main server module that runs the Flask Server.
-
-Examples:
-
-  Add files to playlist via POST to /add::
-
-    curl -i -H "Content-Type: application/json" -X POST -d '{"path":"/media/music/Misc/The Champs - Tequila.mp3"}' http://localhost:5000/add
-
 """
 
 from __future__ import print_function, absolute_import
@@ -17,7 +10,7 @@ import json
 from pprint import pprint as pp
 
 try:
-    from flask import Flask, render_template, request, jsonify, send_from_directory
+    from flask import Flask, request, jsonify, send_from_directory
     app = Flask(__name__, static_folder='../frontend/dist', static_url_path='/')
     FLASK_INSTALLED = True
 except:
@@ -30,224 +23,156 @@ try:
 except:
     JUKEBOX_INSTALLED = False
 
+## Helper functions
+def succ(field='data',value=''):
+    ''' 
+    Return a json object indicating success.
+    '''
+    return {
+        'status': 'success',
+        field: value
+    }
+
+def fail(field='message',msg=''):
+    ''' 
+    Return a json object indicating failure.
+    '''
+    return {
+        'status': 'fail',
+        field: msg
+    }
+
 ## API Catch-all Route
 # This must be the first route defined to catch all non-API paths
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve(path):
-    if path != "" and os.path.exists(app.static_folder + '/' + path):
+    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
         return send_from_directory(app.static_folder, path)
     else:
         return send_from_directory(app.static_folder, 'index.html')
 
 ## API
 
-@app.route('/loadcatalog')
+@app.route('/api/loadcatalog')
 def load_catalog():
-    '''
-    Loads catalog from disk.
-
-    Returns:
-      json(list): A serialized list of songs added
-    '''
+    '''Loads catalog from disk.'''
     songs = JUKE.load_catalog()
-    #retval = [s.title for s in songs]
     retval = [s._serialize(skip=['filename']) for s in songs]
     return jsonify(succ(value=retval))
 
-@app.route('/get/artists')
+@app.route('/api/get/artists')
 def get_artists():
-    '''
-    Get a list of artists.
-
-    Returns:
-      json(list): A list of artist names.
-    '''
+    '''Get a list of artists.'''
     retval=sorted(JUKE.songlist.list_artists())
     return jsonify(succ(value=retval))
 
-@app.route('/get/playlist')
+@app.route('/api/get/playlist')
 def get_playlist():
-    '''
-    Get current playlist.
-
-    Returns:
-      json(list): A serialized list of songs currently in the playlist
-    '''
+    '''Get current playlist.'''
     retval = [s._serialize() for s in JUKE.playlist]
     return jsonify(succ(value=retval))
 
-## get_songlist is depricated
-@app.route('/get/songlist')
-def get_songlist():
-    '''
-    ** Depricated **
-
-    ** Do Not Use **
-    '''
-    songs = JUKE.songlist.list_all_songs_by_artist()
-    retval = {a:[s._serialize() for s in songs[a]] for a in songs.keys()}
-    #retval = {a:[s._serialize(skip=['filename']) for s in songs[a]] for a in songs.keys()}
-    return jsonify(succ(value=retval))
-
-@app.route('/get/songs')
+@app.route('/api/get/songs')
 def get_songs():
-    '''
-    Get current playlist.
-
-    Returns:
-      json(list): A serialized list of all of the songs.
-    '''
+    '''Get all songs.'''
     songs = JUKE.songlist
     retval = [s._serialize() for s in songs]
-    #retval = {a:[s._serialize(skip=['filename']) for s in songs[a]] for a in songs.keys()}
     return jsonify(succ(value=retval))
 
-@app.route('/get/currsong')
+@app.route('/api/get/currsong')
 def get_currsong():
-    '''
-    Get current song.
-
-    Returns:
-      json(list): A serialization of the currently playing song.
-    '''
-    retval = JUKE.currsong;
+    '''Get current song.'''
+    retval = JUKE.currsong
     if retval is not None:
         retval = retval._serialize()
-    #retval = {a:[s._serialize(skip=['filename']) for s in songs[a]] for a in songs.keys()}
     return jsonify(succ(value=retval))
 
-@app.route('/get/alwayson')
-def get_alwayson():
-    '''
-    Get the always_on status.
-
-    Returns:
-      json(dict): The current status of always_on.
-    '''
-    retval = JUKE.alwayson;
+@app.route('/api/get/autoplay')
+def get_autoplay():
+    '''Get the autoplay status.'''
+    retval = JUKE.autoplay
     return jsonify(succ(value=retval))
 
-@app.route('/set/alwayson', methods = ['POST'])
-def set_alwayson():
-    '''
-    Set the always_on status.
-
-    Args:
-      status (bool): New status to set for always_on.
-      filter (dict): Key:value to use to filter the songs randomly chosen when always_on.
-
-        | example: ``{"artist":"Mike Patton"}``
-    '''
+@app.route('/api/set/autoplay', methods=['POST'])
+def set_autoplay():
+    '''Set the autoplay status.'''
     content = request.get_json(silent=True)
     if content is None:
         return jsonify(fail(msg="No data sent in request!"))
-    if content in [True,False]:
-        JUKE.alwayson['status'] = content
-    else:
-        if 'status' in content.keys():
-            JUKE.alwayson['status'] = content['status']
-        if 'filters' in content.keys():
-            JUKE.alwayson['filters'] = content['filters']
-    return jsonify(succ(value=JUKE.alwayson))
+    if 'status' in content:
+        JUKE.autoplay['status'] = content['status']
+    if 'filters' in content:
+        JUKE.autoplay['filters'] = content['filters']
+    return jsonify(succ(value=JUKE.autoplay))
 
-@app.route('/add', methods = ['POST'])
+@app.route('/api/add', methods=['POST'])
 def add():
-    '''
-    Add a song to the current playlist.
-
-    All arguments should be sent as data in a single json object.
-
-    Args:
-      content (dict): Request should include, as data, a series of key:value pairs
-        corresponding to jukeberry.catalog.Song() attributes.
-
-      | Example: ``{"artist":["Peeping Tom","Amon Tobin"],"title":"Don't Even Trip"}``
-    '''
+    '''Add a song to the current playlist.'''
     content = request.get_json(silent=True)
     if content is None:
         return jsonify(fail(msg="No data sent in request!"))
-    #pp(content)
     songs = JUKE.songlist.get_songs_by_keyword(**content)
-    #pp([s._serialize() for s in songs])
     for song in songs:
-        songpath = song.filename
-        if os.path.isfile(songpath):
-            JUKE.playlist.append(song)
-        else:
-            return jsonify(fail("%s file does not exist."%songpath))
-        print("Added %s"%songpath)
-        print("Starting Jukebox")
+        JUKE.playlist.append(song)
     JUKE.start_jukebox()
     song_titles = [s.title for s in songs]
     return jsonify(succ(value=song_titles))
 
-@app.route('/add_random', methods = ['POST'])
+@app.route('/api/add_random', methods=['POST'])
 def add_random():
-    '''
-    Add a random song to the current playlist.
-
-    All arguments should be sent as data in a single json object.
-
-    Args:
-      content (Optional(dict)): Request should include, as data, a series of key:value pairs
-        corresponding to jukeberry.catalog.Song() attributes.
-
-      | Example: ``{"genre":"Holiday"}``
-    '''
-    content = request.get_json(silent=True)
-    print("Random: {}".format(content))
+    '''Add a random song to the current playlist.'''
+    content = request.get_json(silent=True) or {}
     song = JUKE.songlist.get_random_song(**content)
     if song is None:
-        return jsonify(fail("No matching songs found."))
-    songpath = song.filename
-    if os.path.isfile(songpath):
-        JUKE.playlist.append(song)
-    else:
-        return jsonify(fail("%s file does not exist."%songpath))
-    print("Randomly added %s"%songpath)
-    print("Starting Jukebox")
+        return jsonify(fail(msg="No songs found matching that criteria"))
+    JUKE.playlist.append(song)
     JUKE.start_jukebox()
     return jsonify(succ(value=song.title))
 
-## Start/Stop
-@app.route('/start')
-def start():
-    '''
-    Start Jukebox! 
-    '''
+@app.route('/api/rm', methods=['POST'])
+def rm():
+    '''Remove a song from the playlist.'''
+    content = request.get_json(silent=True)
+    JUKE.remove_song(content['id'])
+    return jsonify(succ())
+
+@app.route('/api/play', methods=['POST'])
+def play():
+    '''Start playing the jukebox.'''
     JUKE.start_jukebox()
-    return "Jukebox Started!"
+    return jsonify(succ())
 
-def succ(field='data',value=''):
-    ''' 
-    Generates standard JSON reply of the form::
+@app.route('/api/pause', methods=['POST'])
+def pause():
+    '''Pause the jukebox.'''
+    JUKE.pause_jukebox()
+    return jsonify(succ())
 
-        {'stat':'ok', 'data':{} }
-    '''
-    return {'stat':'ok',field:value}
+@app.route('/api/skip', methods=['POST'])
+def skip():
+    '''Skip to the next song in the playlist.'''
+    JUKE.skip_song()
+    return jsonify(succ())
 
-def fail(msg='',code=0):
-    ''' 
-    Generates standard JSON reply of the form::
+@app.route('/api/volume', methods=['POST'])
+def volume():
+    '''Set the volume.'''
+    content = request.get_json(silent=True)
+    JUKE.set_volume(content['level'])
+    return jsonify(succ())
 
-        {'stat':'fail', 'err':{'msg':'', 'code':0} } 
-    '''
-    err = {'msg':msg,'code':code}
-    return {'stat':'fail','err':err}
+@app.route('/api/start')
+def start():
+    '''Start the jukebox.'''
+    JUKE.start_jukebox()
+    return jsonify(succ())
 
-def main():
-    '''
-    Runs when module is called as a script.
-    '''
-    import sys
-    JUKE.load_catalog()
-    if 'debug' in sys.argv:
-        print("Flask DEBUG")
-        app.run(debug = True)
-    else:
-        print("Flask Production")
-        app.run(host='0.0.0.0')
+@app.route('/api/stop')
+def stop():
+    '''Stop the jukebox.'''
+    JUKE.stop_jukebox()
+    return jsonify(succ())
 
 if __name__ == '__main__':
-    main()
+    app.run(host='0.0.0.0', port=5000, debug=True)

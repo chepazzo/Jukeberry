@@ -6,8 +6,8 @@ import GenresView from './components/GenresView';
 import BrowseView from './components/BrowseView';
 import SettingsView from './components/SettingsView';
 import SongListView from './components/SongListView';
-import { getSongs, getCurrentSong, getPlaylist, addSongToPlaylist, addRandomSongToPlaylist, getAlwaysOn, setAlwaysOn } from './services/api';
-import type { Song, AlwaysOnConfig } from './services/api';
+import { getSongs, getCurrentSong, getPlaylist, addSongToPlaylist, addRandomSong, getAutoPlay, setAutoPlay } from './services/api';
+import type { Song, AutoPlayConfig } from './services/api';
 
 type View = 'current' | 'artists' | 'genres' | 'browse' | 'songlist' | 'settings';
 
@@ -19,22 +19,21 @@ function App() {
   const [filter, setFilter] = useState<{ type: 'artist' | 'genre'; value: string } | null>(null);
   const [currentSong, setCurrentSong] = useState<Song | null>(null);
   const [playlist, setPlaylist] = useState<Song[]>([]);
-  const [alwaysOn, setAlwaysOnState] = useState<AlwaysOnConfig | null>(null);
+  const [autoPlay, setAutoPlayState] = useState<AutoPlayConfig | null>(null);
 
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
-        const [fetchedSongs, alwaysOnConfig] = await Promise.all([
+        const [fetchedSongs, autoPlayConfig] = await Promise.all([
           getSongs(),
-          getAlwaysOn(),
+          getAutoPlay(),
         ]);
         setSongs(fetchedSongs);
-        setAlwaysOnState(alwaysOnConfig);
+        setAutoPlayState(autoPlayConfig);
 
         // Derive unique, sorted lists for artists and genres
-        const uniqueArtists = [...new Set(fetchedSongs.flatMap(song => song.artist))].sort();
-        // Assuming 'album' can be used as a proxy for genre for now, based on original app structure.
-        const uniqueGenres = [...new Set(fetchedSongs.map(song => song.album))].sort();
+        const uniqueArtists = [...new Set(fetchedSongs.flatMap((song: Song) => song.artist))].sort();
+        const uniqueGenres = [...new Set(fetchedSongs.flatMap((song: Song) => song.genre || []))].sort();
 
         setArtists(uniqueArtists);
         setGenres(uniqueGenres);
@@ -71,7 +70,7 @@ function App() {
 
   const handleAddSong = async (artist: string, title: string) => {
     try {
-      await addSongToPlaylist(artist, title);
+      await addSongToPlaylist({ artist: [artist], title });
       // Refresh playlist immediately after adding a song
       const pList = await getPlaylist();
       setPlaylist(pList);
@@ -82,7 +81,7 @@ function App() {
 
   const handleRandomSong = async () => {
     try {
-      await addRandomSongToPlaylist(filter || undefined);
+      await addRandomSong(filter || {});
       const pList = await getPlaylist();
       setPlaylist(pList);
     } catch (error) {
@@ -90,32 +89,31 @@ function App() {
     }
   };
 
-  const handleSetAlwaysOn = async (config: AlwaysOnConfig) => {
+  const handleSetAutoPlay = async (config: AutoPlayConfig) => {
     try {
-      await setAlwaysOn(config);
-      setAlwaysOnState(config);
+      await setAutoPlay(config);
+      setAutoPlayState(config);
     } catch (error) {
-      console.error('Error setting always on config:', error);
+      console.error('Error setting auto play config:', error);
     }
   };
 
   const renderView = () => {
     switch (currentView) {
       case 'current':
-        return <CurrentView currentSong={currentSong} playlist={playlist} alwaysOn={alwaysOn} />;
+        return <CurrentView currentSong={currentSong} playlist={playlist} autoPlay={autoPlay} />;
       case 'artists':
         return <ArtistsView artists={artists} onSelectArtist={(artist: string) => handleFilterSelect('artist', artist)} />;
       case 'genres':
         return <GenresView genres={genres} onSelectGenre={(genre: string) => handleFilterSelect('genre', genre)} />;
       case 'songlist': {
         if (!filter) return <p>No filter selected.</p>;
-        const filteredSongs = songs.filter(song => {
+        const filteredSongs = songs.filter((song: Song) => {
           if (filter.type === 'artist') {
             return song.artist.includes(filter.value);
           }
           if (filter.type === 'genre') {
-            // Using album as genre proxy
-            return song.album === filter.value;
+            return song.genre && song.genre.includes(filter.value);
           }
           return false;
         });
@@ -124,9 +122,9 @@ function App() {
       case 'browse':
         return <BrowseView songs={songs} onAddSong={handleAddSong} />;
       case 'settings':
-        return <SettingsView config={alwaysOn} artists={artists} genres={genres} onSave={handleSetAlwaysOn} />;
+        return <SettingsView config={autoPlay} artists={artists} genres={genres} onSave={handleSetAutoPlay} />;
       default:
-        return <CurrentView currentSong={currentSong} playlist={playlist} alwaysOn={alwaysOn} />;
+        return <CurrentView currentSong={currentSong} playlist={playlist} autoPlay={autoPlay} />;
     }
   };
 
@@ -136,7 +134,7 @@ function App() {
         <h1>Jukeberry</h1>
       </header>
       <nav className="app-nav">
-        <button onClick={() => setCurrentView('current')}>Top</button>
+        <button onClick={() => setCurrentView('current')}>Now Playing</button>
         <button onClick={() => setCurrentView('artists')}>Artists</button>
         <button onClick={() => setCurrentView('genres')}>Genres</button>
         <button onClick={() => setCurrentView('browse')}>Browse</button>
