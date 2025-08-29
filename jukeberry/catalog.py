@@ -11,6 +11,7 @@ import eyed3
 import eyed3.mp3
 import random
 import itertools
+import hashlib
 
 from . import utils
 
@@ -62,7 +63,8 @@ class Song(object):
         self.year = year
         self.secs = secs
         self.hms = ''
-        self.id = None
+        self.id = hashlib.md5(filename.encode()).hexdigest()
+        self.has_art = False
         if type(self.secs) == int:
             self.hms = utils.secs2ms(self.secs)
 
@@ -153,14 +155,15 @@ class SongCatalog(list):
             if os.path.isdir(filename):
                 songs.extend(self.index(filename + "/", verbosity))
             else:
-                if os.path.isfile(filename):
+                if os.path.isfile(filename) and filename.lower().endswith('.mp3'):
                     try:
                         audiofile = eyed3.load(filename)
                         # If audiofile is None, it's not a supported format or is corrupt.
                         if audiofile is None or audiofile.info is None:
+                            print(f"WTF: 'eyed3.load' had a problem loading data from {filename}")
                             continue
                     except (UnicodeDecodeError, ValueError):
-                        print("WTF: eyed3.load({}) failed with error: {}".format(asciifilename, e))
+                        print(f"WTF: eyed3.load({filename}) failed with error: {e}")
                         # Catches potential decoding errors or other issues within eyed3
                         continue
 
@@ -190,6 +193,20 @@ class SongCatalog(list):
             return None
         return super(SongCatalog, self).append(song, *args, **kwargs)
 
+    def get_song_by_id(self, song_id):
+        """Find Song() in list based on song ID.
+
+        Args:
+          song_id (str): ID of song to find.
+
+        Returns:
+          Song: Song() object. Returns None if not found.
+        """
+        for s in self:
+            if s.id == song_id:
+                return s
+        return None
+
     def find_song(self, song):
         """Find Song() in list based on filename.
 
@@ -198,82 +215,56 @@ class SongCatalog(list):
 
         Returns:
           Song: Song() object. Returns None if not found.
-
-        .. todo:
-           Replace verbosity ``print`` with logger.
         """
-        filename = song
-        if type(song) == Song:
-            filename = Song.filename
-        retval = None
-        songs = [s for s in self if s.filename == filename]
-        if len(songs) > 0:
-            retval = songs[0]
-        return retval
+        for s in self:
+            if s.filename == song:
+                return s
+        return None
 
-    def add_song(self, filename):
-        """Adds song to list from filename.
+    def add_song(self, filename, verbosity=0):
+        """Add a song to the catalog.
 
         Args:
-          filename (str): Full path of filename of song.
+          filename (str): Fully qualified path to song on disk.
+          verbosity (Optional[int]): The verbosity level to output results.
 
         Returns:
-          Song: Song() object of song that was added.
-            Returns None if there was a problem.
-
-        .. todo:
-           Replace verbosity ``print`` with logger.
-
-        .. todo:
-           Raise errors instead of ``print`` and ``return None``
+          Song: Song() object. Returns None if not found.
         """
-        asciifilename = filename.encode('ascii', 'ignore')
         if self.find_song(filename):
-            #print("WTF: {} already cataloged".format(asciifilename))
+            print("OOPS: Can't find '{}'. What were you trying to add?".format(filename))
             return None
+
         try:
-            print("Adding {}".format(asciifilename))
-            id3 = eyed3.load(filename)
-            # If id3 is None, it's not a supported format or is corrupt.
-            # Also check for id3.info, as some files load but have no info.
-            if id3 is None or id3.info is None:
-                print("WTF: {} is not a valid audio file or is corrupt".format(asciifilename))
+            audiofile = eyed3.load(filename)
+            if audiofile is None or not hasattr(audiofile, 'tag') or audiofile.info is None:
+                print("OOPS: {} is not a valid audio file or is corrupt".format(filename))
                 return None
         except Exception as e:
-            print("WTF: eyed3.load({}) failed with error: {}".format(asciifilename, e))
+            print("OOPS: eyed3.load({}) failed with error: {}".format(filename, e))
             return None
 
-        # Ensure the file has a tag object
-        if id3.tag is None:
-            id3.initTag()
-        genre = getattr(id3.tag,'genre',None)
-        if genre:
-            genre = genre.name
-        else:
-            genre = ''
-        tags = {
-            "artist": id3.tag.artist,
-            "title": id3.tag.title,
-            "album": id3.tag.album,
-            "genre": genre,
-            "year": id3.tag.artist,
-            "secs": id3.info.time_secs,
-        }
-        if not tags["artist"] or not tags["title"]:
-            print("Artist or title not set in " + \
-                filename + " - skipping file")
-            return None
+        if audiofile.tag is None:
+            audiofile.initTag()
+
+        artist = audiofile.tag.artist.split('/') if audiofile.tag.artist else None
+        genre = audiofile.tag.genre.name.split('/') if audiofile.tag.genre else None
+
+        best_date = audiofile.tag.getBestDate()
         song = Song(filename,
-            artist=split_tag(tags["artist"], 0),
-            album=tags["album"],
-            genre=split_tag(tags["genre"], 0),
-            title=tags["title"],
-            year=tags["year"],
-            secs=tags["secs"],
-        )
-        #print("WTF: added %s"%song.title)
+                    artist=artist,
+                    title=audiofile.tag.title,
+                    album=audiofile.tag.album,
+                    genre=genre,
+                    year=str(best_date) if best_date else None,
+                    secs=audiofile.info.time_secs)
+
+        if audiofile.tag.images:
+            song.has_art = True
+
+        print(f"added {filename}: song={song.title} artist={song.artist} genre={song.genre} has_art={song.has_art}")
+
         self.append(song)
-        #print("WTF: That makes",len(self),"songs")
         return song
 
     def list_all_songs_by_artist(self):

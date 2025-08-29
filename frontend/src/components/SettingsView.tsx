@@ -6,9 +6,10 @@ interface SettingsViewProps {
   artists: string[];
   genres: string[];
   onSave: (config: AutoPlayConfig) => void;
+  onReloadCatalog: () => void;
 }
 
-const SettingsView: React.FC<SettingsViewProps> = ({ config, artists, genres, onSave }) => {
+const SettingsView: React.FC<SettingsViewProps> = ({ config, artists, genres, onSave, onReloadCatalog }) => {
   const [status, setStatus] = useState(false);
   const [filterType, setFilterType] = useState('artist');
   const [filterValue, setFilterValue] = useState('');
@@ -58,6 +59,10 @@ const SettingsView: React.FC<SettingsViewProps> = ({ config, artists, genres, on
         </select>
       </div>
       <button onClick={handleSave} style={{ marginTop: '20px' }}>Save Settings</button>
+      <div style={{ marginTop: '40px' }}>
+        <h3>Library Management</h3>
+        <button onClick={onReloadCatalog}>Reload Catalog</button>
+      </div>
     </div>
   );
 };

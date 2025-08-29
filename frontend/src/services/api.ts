@@ -1,9 +1,13 @@
 export interface Song {
+  id: string;
   title: string;
   artist: string[];
   album: string;
+  genre: string[];
+  year: string;
   secs: number;
-  genre?: string; // Genre is not in the original model, but good to have
+  hms: string;
+  has_art: boolean;
 }
 
 export interface AlwaysOnFilter {

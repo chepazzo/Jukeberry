@@ -38,6 +38,8 @@
 
 /* Song CSS */
 div.song {
+  display: flex;
+  align-items: center;
   font-size: 22px;
   border: 1px solid #ccc;
   padding: 10px;
@@ -100,4 +102,33 @@ div.song:hover {
 .grid-item:hover {
   background-color: #e0e0e0;
   border-color: #999;
+}
+
+.album-art {
+  flex-shrink: 0;
+  margin-right: 15px;
+}
+
+.album-art img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.song-info {
+  flex-grow: 1;
+}
+
+.view-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.skip-button-small {
+  padding: 2px 8px;
+  font-size: 14px;
+  margin-left: 10px;
 }

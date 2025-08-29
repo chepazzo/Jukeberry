@@ -7,14 +7,18 @@ interface CurrentViewProps {
   currentSong: Song | null;
   playlist: Song[];
   autoPlay: AutoPlayConfig | null;
+  onSkip: () => void;
 }
 
-const CurrentView: React.FC<CurrentViewProps> = ({ currentSong, playlist, autoPlay }) => {
+const CurrentView: React.FC<CurrentViewProps> = ({ currentSong, playlist, autoPlay, onSkip }) => {
   const totalPlaylistSecs = playlist.reduce((acc, song) => acc + song.secs, 0);
   return (
     <div>
       <div>
-        <h2>Currently Playing</h2>
+        <div className="view-header">
+          <h2>Currently Playing</h2>
+          {currentSong && <button onClick={onSkip} className="skip-button-small">Skip</button>}
+        </div>
         {currentSong ? (
           <SongItem song={currentSong} />
         ) : (

@@ -43,16 +43,15 @@ def _popenAndCall(onExit, popenArgs):
     Returns:
       threading.Thread: Thread object created that contains the running program.
     """
-    def runInThread(onExit, popenArgs):
-        proc = subprocess.Popen(*popenArgs)
+    def runInThread(onExit, proc):
         proc.wait()
         onExit()
         return
-    thread = threading.Thread(target=runInThread, args=(onExit, popenArgs))
+    proc = subprocess.Popen(*popenArgs)
+    thread = threading.Thread(target=runInThread, args=(onExit, proc))
     thread.start()
-    #pp(dir(thread))
     # returns immediately after the thread starts
-    return thread
+    return (proc, thread)
 
 def secs2ms(secs):
     '''

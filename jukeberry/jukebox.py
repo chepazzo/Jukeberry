@@ -168,7 +168,7 @@ class Jukebox(object):
         if filename is not None:
             self.currsong = song
             print("PLAYER = "+self.player)
-            currthread = utils._popenAndCall(self.play_next_song,([self.player,filename],))
+            self.proc, _ = utils._popenAndCall(self.play_next_song,([self.player,filename],))
 
     def add_songs_to_playlist(self,**kwargs):
         '''
@@ -179,6 +179,12 @@ class Jukebox(object):
         '''
         songs = self.catalog.get_songs_by_keyword(**kwargs)
         self.playlist.extend(songs)
+
+    def skip_song(self):
+        """Skips to the next song in the playlist."""
+        if self.proc:
+            self.proc.kill()
+        # The onExit callback from the killed process will automatically call play_next_song.
 
     def get_next_song(self):
         '''

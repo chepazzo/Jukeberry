@@ -10,7 +10,8 @@ import json
 from pprint import pprint as pp
 
 try:
-    from flask import Flask, request, jsonify, send_from_directory
+    from flask import Flask, request, jsonify, send_from_directory, Response
+    import eyed3
     app = Flask(__name__, static_folder='../frontend/dist', static_url_path='/')
     FLASK_INSTALLED = True
 except:
@@ -79,6 +80,17 @@ def get_songs():
     songs = JUKE.songlist
     retval = [s._serialize() for s in songs]
     return jsonify(succ(value=retval))
+
+@app.route('/api/art/<song_id>')
+def get_art(song_id):
+    '''Get album art for a given song.'''
+    song = JUKE.songlist.get_song_by_id(song_id)
+    if song and song.has_art:
+        audiofile = eyed3.load(song.filename)
+        if audiofile.tag.images:
+            image = audiofile.tag.images[0]
+            return Response(image.image_data, mimetype=image.mime_type)
+    return ('', 204)
 
 @app.route('/api/get/currsong')
 def get_currsong():
