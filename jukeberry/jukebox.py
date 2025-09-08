@@ -11,6 +11,7 @@ import json
 import os
 import time
 import random
+import subprocess
 
 from pprint import pprint as pp
 
@@ -169,6 +170,9 @@ class Jukebox(object):
             self.currsong = song
             print("PLAYER = "+self.player)
             self.proc, _ = utils._popenAndCall(self.play_next_song,([self.player,filename],))
+            # Use '-a pulse' to direct mpg123 output to the PulseAudio server, which handles Bluetooth.
+            #self.proc = subprocess.Popen([self.player, "-a", "pulse", filename])
+            #self.proc = subprocess.Popen([self.player, "-a", "bluez_output.04_57_91_A5_33_EF.1", filename])
 
     def add_songs_to_playlist(self,**kwargs):
         '''

@@ -1,0 +1,2 @@
+# This udev rule will automatically mount USB mass storage devices inside the container.
+ACTION=="add", SUBSYSTEMS=="usb", KERNEL=="sd[a-z][0-9]", ENV{ID_FS_USAGE}=="filesystem", RUN+="/bin/mkdir -p /music/usb-%k", RUN+="/usr/bin/systemd-mount --no-block --automount=yes --collect /dev/%k /music/usb-%k"

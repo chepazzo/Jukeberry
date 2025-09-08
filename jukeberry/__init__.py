@@ -31,8 +31,7 @@ DEBUG=True
 THREADED=True
 SSL=False
 AUTOLOAD=False
-PLAYER=omxplayer
-#PLAYER=mpg123
+PLAYER=mpg123
 LIB=/var/media/music/
 
 [WEB]

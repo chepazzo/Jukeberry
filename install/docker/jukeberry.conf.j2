@@ -1,0 +1,25 @@
+[GLOBAL]
+
+## Starts the app in debug mode
+DEBUG=True
+
+## Autoloads the music library on startup.
+AUTOLOAD=False
+
+## Enables threading for the webserver
+THREADED=True
+
+## Enables SSL (https)
+SSL=False
+
+## Specifies the player to use.
+## This player must be findable with `which`
+PLAYER={{ PLAYER }}
+
+## The location of the music library (do not change for Docker).
+LIB=/music/
+
+[WEB]
+# Put all web API config here
+HOST=0.0.0.0
+PORT=5000

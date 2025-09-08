@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  jukeberry:
+    build:
+      context: ../../
+      dockerfile: install/docker/Dockerfile
+    ports:
+      - "{{ CONTAINER_PORT }}:5000"
+    environment:
+      - PULSE_SERVER=unix:/run/user/1000/pulse/native
+    volumes:
+      - {{ MUSIC_DIR }}:/music
+      - {{ CONFIG_DIR }}:/config
+      - /run/user/1000/pulse/native:/run/user/1000/pulse/native
+      - ~/.config/pulse/cookie:/root/.config/pulse/cookie
+    devices:
+      - /dev/snd:/dev/snd
+    restart: unless-stopped
+

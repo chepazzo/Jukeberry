@@ -1,36 +1,48 @@
-# Use an official Python runtime as a parent image
-FROM python:3.9-slim
+# Stage 1: Build the frontend assets
+FROM node:18-slim as builder
 
-# Set the working directory in the container
 WORKDIR /usr/src/app
 
-# Install system dependencies (git, player, and tools for USB automount)
-RUN apt-get update && apt-get install -y git mpg321 udisks2 udev --no-install-recommends && \
-    rm -rf /var/lib/apt/lists/*
+# Copy frontend package management files
+COPY frontend/package.json frontend/package-lock.json* ./frontend/
 
-# Copy the application source code into the container
-COPY . .
+# Install frontend dependencies
+RUN cd frontend && npm install --legacy-peer-deps
 
-# Install Python dependencies
+# Copy the rest of the frontend source code
+COPY frontend/ ./frontend/
+
+# Build the frontend
+RUN cd frontend && npm run build
+
+# --- 
+
+# Stage 2: Build the final Python application image
+FROM python:3.9-slim
+
+WORKDIR /usr/src/app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --fix-missing \
+    git \
+    mpg123 \
+    mpg321 \
+    --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy Python requirements first to leverage Docker cache
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy udev rule for USB automounting
-COPY install/docker/99-usb-mount.rules /etc/udev/rules.d/99-usb-mount.rules
+# Copy the entire application source code
+COPY . .
+
+# Copy the built frontend assets from the builder stage
+COPY --from=builder /usr/src/app/frontend/dist ./frontend/dist
 
 # Copy and set up the start script
 COPY install/docker/start.sh /start.sh
 RUN chmod +x /start.sh
 
-# Make port 5000 available
-EXPOSE 5000
-
-# Define environment variables for configuration
-ENV PLAYER=mpg321
-ENV MUSIC_LIBRARY=/music
-
-# Create a default config file if one isn't mounted
-RUN mkdir -p /config
-RUN echo "[jukeberry]\nplayer = ${PLAYER}\nlibrary = ${MUSIC_LIBRARY}" > /config/jukeberry.conf
-
-# Set the entrypoint to our start script
+# Set the entrypoint
 ENTRYPOINT ["/start.sh"]

@@ -1,0 +1,3 @@
+# This udev rule will automatically mount USB mass storage devices.
+# It uses systemd-mount to create a mount point under your music library directory.
+ACTION=="add", SUBSYSTEMS=="usb", KERNEL=="sd[a-z][0-9]", ENV{ID_FS_USAGE}=="filesystem", RUN+="/bin/mkdir -p {{ music_library_path }}/usb-%k", RUN+="/usr/bin/systemd-mount --no-block --automount=yes --collect /dev/%k {{ music_library_path }}/usb-%k"

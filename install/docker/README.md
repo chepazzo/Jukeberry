@@ -4,8 +4,10 @@ This directory contains the necessary files to build and run the Jukeberry appli
 
 ## Prerequisites
 
-- [Docker](https://docs.docker.com/get-docker/)
-- [Docker Compose](https://docs.docker.com/compose/install/)
+- [Docker](https://docs.docker.com/get-docker/) (v20.10.0+)
+- Docker Compose (v2.0.0+ - included with recent Docker Desktop installations)
+
+> **Note:** This setup uses the modern `docker compose` command (with a space) which is part of Docker Compose V2. If you're using an older version, please update to Docker Desktop 4.0.0 or later, or install the [Docker Compose plugin](https://docs.docker.com/compose/install/linux/#install-using-the-repository) manually.
 
 ## Quickstart
 
@@ -27,7 +29,7 @@ This directory contains the necessary files to build and run the Jukeberry appli
     From this directory, run the following command to build the Docker image and start the Jukeberry service in the background:
 
     ```bash
-    docker-compose up --build -d
+    docker compose up --build -d
     ```
 
 4.  **Access Jukeberry:**
@@ -43,9 +45,9 @@ This directory contains the necessary files to build and run the Jukeberry appli
 
 -   **To stop the service:**
     ```bash
-    docker-compose down
+    docker compose down
     ```
 -   **To view the logs:**
     ```bash
-    docker-compose logs -f
+    docker compose logs -f
     ```
